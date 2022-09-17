@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-    //lmao i have totally forgot how to use java
+    //lmao I have totally forgotten how to use java
     public static void main(String[] args) {
         Scanner imp = new Scanner(System.in);
         System.out.println("input maze size (Please only input a single int)");
@@ -10,6 +10,7 @@ public class Main {
         Cell[][] maze = makeMaze(mazeSize);
         // System.out.println(maze);
     }
+    //This creates a completely open maze. every value is set to 3.
     public static Cell[][] makeMaze(int size){
         Cell[][] maze = new Cell[size][size];
         int i = 0;
@@ -20,6 +21,10 @@ public class Main {
             }
         }
         return maze;
+    }
+    //does nothing as yet
+    public static Cell[][] GenPath(Cell[][] blankMaze){
+        return blankMaze;
     }
 }
 
