@@ -33,7 +33,7 @@ I think the word node and cell are interchanged halfway through but mean the sam
     No Loops or inaccessible areas
     Represent using a 2d array of cells that stores all four walls and if those walls are open or close of each cell
     We always know the start and finish cell
-    Maze has to have a closed area (just outer connected walls that limit movement outside the maze
+    Maze has to have a closed area just outer connected walls that limit movement outside the maze
 
     To create the maze we "must" just the random walk technique,
     To generate an n×m maze, we create a grid graph of size n×m. The nodes in the grid represent the cells in the
