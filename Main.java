@@ -10,6 +10,7 @@ public class Main {
         String mazeSizeRaw = imp.nextLine();
         int mazeSize = Integer.parseInt(mazeSizeRaw);
         Cell[][] maze = makeMaze(mazeSize);
+        System.out.println(maze[0].length);
         maze = GenPath(maze);
         // System.out.println(maze);
     }
