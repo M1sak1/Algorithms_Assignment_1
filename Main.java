@@ -1,4 +1,6 @@
+import java.util.Random;
 import java.util.Scanner;
+import java.util.random.*;
 
 public class Main {
     //lmao I have totally forgotten how to use java
@@ -8,6 +10,7 @@ public class Main {
         String mazeSizeRaw = imp.nextLine();
         int mazeSize = Integer.parseInt(mazeSizeRaw);
         Cell[][] maze = makeMaze(mazeSize);
+        maze = GenPath(maze);
         // System.out.println(maze);
     }
     //This creates a completely open maze. every value is set to 3.
@@ -24,7 +27,18 @@ public class Main {
     }
     //does nothing as yet
     public static Cell[][] GenPath(Cell[][] blankMaze){
-        return blankMaze;
+        Cell[][] popMaze = blankMaze;
+        boolean Finished = false;
+        Random rand = new Random();
+        int rnum = 0;
+        while (!Finished){
+            rnum = rand.nextInt(6);
+            if(rnum == 5){
+                Finished = true;
+            }
+            System.out.println(rnum);
+        }
+        return popMaze;
     }
 }
 /*Assessment Specifications MAZE Generation
@@ -48,6 +62,7 @@ I think the word node and cell are interchanged halfway through but mean the sam
     see figure 2-3 for a visual representation
     Does seem like you can go back through the maze and break off of a previously used node in another direction that still satisfies the limitations
 
+    https://www.geeksforgeeks.org/random-walk-implementation-python/
 
     When running this program through the command line it should take the amount of rows and columns as the input and output a file name
         Should give error messages for invalid inputs
