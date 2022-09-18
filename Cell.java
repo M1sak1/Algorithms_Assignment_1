@@ -12,4 +12,13 @@ public class Cell {
     public void setFinish(boolean newFinish){
         isFinish = newFinish;
     }
+    public boolean getStart(){
+        return isStart;
+    }
+    public boolean getFinish(){
+        return isFinish;
+    }
+    public int getDir(){
+        return dir;
+    }
 }
