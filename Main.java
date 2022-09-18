@@ -41,7 +41,16 @@ public class Main {
         }
         return popMaze;
     }
+
+    public static void print(Cell[][] maze){
+        String out = "";
+        int i = 0;
+        for(i = 0; i < maze.length; i++){
+            out += maze[i].getDir();
+        }
+    }
 }
+
 /*Assessment Specifications MAZE Generation
 I think the word node and cell are interchanged halfway through but mean the same thing
     Size(row,column) is a variable that is inputted on maze generation
