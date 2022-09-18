@@ -39,7 +39,7 @@ public class Main {
         System.out.print(maze[0].length-1);
         int coordinate1 = rand.nextInt(maze.length);
         int coordinate2 = rand.nextInt(maze[0].length);
-
+        maze[coordinate1][coordinate2].isStart = true;
 
         return maze;
     }
@@ -53,6 +53,7 @@ public class Main {
             if(coordinate1 == maze.length -1 || coordinate1 == maze.length - 1){
                 randomwalk = rand.nextInt(3,5);
             }
+            maze[coordinate1][coordinate2].dir = randomwalk;
             //I dont really know how cells work and trying to figure out the maze through only if right or down are open is really annoying
             //maze[coordinate1][coordinate2] = randomwalk;
 
