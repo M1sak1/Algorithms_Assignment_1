@@ -1,6 +1,5 @@
 import java.util.Random;
 import java.util.Scanner;
-import java.util.random.*;
 
 public class Main {
     //lmao I have totally forgotten how to use java
@@ -11,7 +10,8 @@ public class Main {
         int mazeSize = Integer.parseInt(mazeSizeRaw);
         Cell[][] maze = makeMaze(mazeSize);
         System.out.println(maze[0].length);
-        maze = GenPath(maze);
+        maze = GenPaths(maze);
+        print(maze);
         // System.out.println(maze);
     }
     //This creates a completely open maze. every value is set to 3.
@@ -27,27 +27,35 @@ public class Main {
         return maze;
     }
     //does nothing as yet
-    public static Cell[][] GenPath(Cell[][] blankMaze){
+    public static Cell[][] GenPaths(Cell[][] blankMaze){
         Cell[][] popMaze = blankMaze;
         boolean Finished = false;
         Random rand = new Random();
         int rnum = 0;
-        while (!Finished){
-            rnum = rand.nextInt(6);
-            if(rnum == 5){
-                Finished = true;
-            }
-            System.out.println(rnum);
-        }
+        // Creating the start and end points
+
+        // How to generate a path.
+        // General idea, 0 - Go up, 1 - Go right, 2 - Go down, 3 - Go left.
+        // check if it is a valid move.
+        // Move to the next position.
+        // repeat
+
+
+        System.out.println(rnum);
+
         return popMaze;
     }
 
     public static void print(Cell[][] maze){
         String out = "";
         int i = 0;
+        int j = 0;
         for(i = 0; i < maze.length; i++){
-            out += maze[i].getDir();
+            for(j = 0; j < maze.length; j++){
+                out += maze[i][j].getDir();
+            }
         }
+        System.out.println(out);
     }
 }
 
