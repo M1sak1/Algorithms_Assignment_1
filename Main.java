@@ -2,17 +2,23 @@ import java.util.Scanner;
 import java.util.Random;
 public class Main {
     //lmao I have totally forgotten how to use java
+//    public static void main(String[] args) {
+//        Scanner imp = new Scanner(System.in);
+//        System.out.println("input maze size row (Please only input a single int)");
+//        String mazeSizeRaw = imp.nextLine();
+//        int mazeSize = Integer.parseInt(mazeSizeRaw);
+//        Scanner imp2 = new Scanner(System.in);
+//        System.out.println("input maze size column (Please only input a single int)");
+//        int mazeSize2 = Integer.parseInt(imp2.nextLine());
+//
+//
+//        Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
+//        maze = MazePath(maze);
+//        // System.out.println(maze);
+//        PrintMaze(maze);
+//    }
     public static void main(String[] args) {
-        Scanner imp = new Scanner(System.in);
-        System.out.println("input maze size row (Please only input a single int)");
-        String mazeSizeRaw = imp.nextLine();
-        int mazeSize = Integer.parseInt(mazeSizeRaw);
-        Scanner imp2 = new Scanner(System.in);
-        System.out.println("input maze size column (Please only input a single int)");
-        int mazeSize2 = Integer.parseInt(imp2.nextLine());
-
-
-        Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
+        Cell[][] maze = makeMaze(3,3); //I think the row and column can be different
         maze = MazePath(maze);
         // System.out.println(maze);
         PrintMaze(maze);
