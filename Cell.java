@@ -1,6 +1,6 @@
 public class Cell {
     // by default the maze will be completely oepn.
-    int dir = 3;
+    int dir = -1;
     boolean isStart = false;
     boolean isFinish = false;
     public void setDir(int newDir){
@@ -9,9 +9,7 @@ public class Cell {
     public void setStart(boolean newStart){
         isStart = newStart;
     }
-    public void setFinish(boolean newFinish){
-        isFinish = newFinish;
-    }
+    public void setFinish(boolean newFinish) { isFinish = newFinish;}
     public boolean getStart(){
         return isStart;
     }

@@ -35,33 +35,92 @@ public class Main {
 
     public static Cell[][] MazePath(Cell[][] maze){
         Random rand = new Random();
-        System.out.println(maze.length-1);
-        System.out.print(maze[0].length-1);
+       //System.out.println(maze.length-1);
+       //System.out.print(maze[0].length-1);
         int coordinate1 = rand.nextInt(maze.length);
         int coordinate2 = rand.nextInt(maze[0].length);
-        maze[coordinate1][coordinate2].isStart = true;
-
+        maze[coordinate1][coordinate2].setStart(true);
+        maze = MazeRecursion(maze, coordinate1, coordinate2);
+        System.out.println("WE GOT OUT");
         return maze;
     }
     public static Cell[][] MazeRecursion(Cell[][] maze, int coordinate1, int coordinate2){
         Random rand = new Random();
-        if(maze[coordinate1][coordinate2] == null){
-            int randomwalk = rand.nextInt(4);
-            if(coordinate1 == 0 || coordinate2 == 0){
-                randomwalk = rand.nextInt(2);
+        int newcoordinate1 = coordinate1; //affects the row
+        int newcoordinate2 = coordinate2; //affects the column
+        int randomwalk = -1; //just so it wont yell at me
+        if(maze[coordinate1][coordinate2].getDir() == -1){
+            int functional = 0; //makes sure the created path is correct and dousn't create a loop or etc
+            while(functional == 0) {
+                randomwalk = rand.nextInt(4);
+                switch (randomwalk){
+                    case 0:
+                        newcoordinate1 = coordinate1 - 1;
+                        newcoordinate2 = coordinate2 - 1;
+                        if(newcoordinate1 >= 0 && newcoordinate2 >= 0){ //checks if the cell is in the top left
+                            maze[coordinate1][coordinate2].setDir(randomwalk);
+                            functional = 1;
+                            break;
+                        }
+                        randomwalk = rand.nextInt(1,4); //stops it from getting the number 0 as it cant work as the cell is in the top left
+                    case 1:
+                        newcoordinate1 = coordinate2 + 1;
+                        if(newcoordinate2 < maze.length){
+                            maze[coordinate1][coordinate2].setDir(randomwalk);
+                            functional = 1;
+                            break;
+                        }
+                        randomwalk = rand.nextInt(0,4); //sad i cant exclude 1
+                    case 2:
+                        newcoordinate1 = coordinate1 + 1;
+                        if(newcoordinate1 < maze[0].length){
+                            maze[coordinate1][coordinate2].setDir(randomwalk);
+                            functional = 1;
+                            break;
+                        }
+                        randomwalk = rand.nextInt(0,4); //sad i cant exclude 2
+                    case 3:
+                        newcoordinate1 = coordinate1 + 1;
+                        newcoordinate2 = coordinate2 + 1;
+                        if(newcoordinate1 < maze.length && newcoordinate2 < maze[0].length){ //checks if the cell is in the top left
+                            maze[coordinate1][coordinate2].setDir(randomwalk);
+                            functional = 1;
+                            break;
+                        }
+                        randomwalk = rand.nextInt(0,3); //stops it from getting the number 3 as it cant work as the cell is in the bottom right
+                }
             }
-            if(coordinate1 == maze.length -1 || coordinate1 == maze.length - 1){
-                randomwalk = rand.nextInt(3,5);
+            System.out.print(coordinate1 + " " + coordinate2);
+            System.out.println(" " + randomwalk);
+            if(randomwalk == 0 || randomwalk == 3){
+                maze = MazeRecursion(maze,coordinate1,newcoordinate2);
+                maze = MazeRecursion(maze,newcoordinate1,coordinate2);
             }
-            maze[coordinate1][coordinate2].dir = randomwalk;
-            //I dont really know how cells work and trying to figure out the maze through only if right or down are open is really annoying
-            //maze[coordinate1][coordinate2] = randomwalk;
+            else{
+                maze = MazeRecursion(maze,newcoordinate1,newcoordinate2);
+            }
 
-            //will go forever
-            //maze = MazeRecursion(maze,coordinate1,coordinate2);
+            if(newcoordinate1 - 1 > 0 && newcoordinate1 + 1 < maze.length){
+                if(maze[newcoordinate1 - 1][newcoordinate2].getDir() == -1){
+                    maze = MazeRecursion(maze,newcoordinate1 -1, newcoordinate2);
+                }
+                if(maze[newcoordinate1 + 1][newcoordinate2].getDir() == -1) {
+                    maze = MazeRecursion(maze, newcoordinate1 + 1, newcoordinate2);
+                }
+            }
+            if(newcoordinate2 - 1 > 0 && newcoordinate2 + 1 < maze.length){
+                if(maze[newcoordinate1][newcoordinate2 - 1].getDir() == -1){
+                    maze = MazeRecursion(maze,newcoordinate1, newcoordinate2 - 1);
+                }
+                if(maze[newcoordinate1][newcoordinate2 + 1].getDir() == -1) {
+                    maze = MazeRecursion(maze, newcoordinate1, newcoordinate2 + 1);
+                }
+            }
         }
         return maze;
     }
+
+
 }
 
 /*Assessment Specifications MAZE Generation
