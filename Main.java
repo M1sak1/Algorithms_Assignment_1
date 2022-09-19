@@ -100,7 +100,7 @@ public class Main {
         int newcoordinate1 = coordinate1; //affects the row
         int newcoordinate2 = coordinate2; //affects the column
         int randomwalk = 0; //just so it wont yell at me
-        if((coordinate1 < maze.length && coordinate2 < maze[0].length) && maze[coordinate1][coordinate2].getDir() == -1){
+        if(maze[coordinate1][coordinate2].getDir() == -1){
             int functional = 0; //makes sure the created path is correct and dousn't create a loop or etc
             while(functional == 0) {
                 randomwalk = rand.nextInt(4);
