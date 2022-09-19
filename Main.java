@@ -15,6 +15,7 @@ public class Main {
         Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
         maze = MazePath(maze);
         // System.out.println(maze);
+        PrintMaze(maze);
     }
     //This creates a completely open maze. every value is set to 3.
     public static Cell[][] makeMaze(int size1, int size2){
@@ -28,28 +29,69 @@ public class Main {
         }
         return maze;
     }
-    //does nothing as yet
-    public static Cell[][] GenPath(Cell[][] blankMaze){
-        return blankMaze;
+
+    //print the list to a file. but as yet does nothing
+    // file format -> n,m:start:finish:maze
+    public static void PrintMaze(Cell[][] maze){
+        String totalpath = "";
+        boolean found = false;
+        int i, j;
+        totalpath = findIndx(maze);
+        System.out.println(totalpath);
+        //print to a file
+    }
+
+    //used to find the start and the finish node.
+    public static String findIndx(Cell[][] maze){
+        String val = "";
+        String start = "";
+        String finish = "";
+        int i, j;
+        for(i = 0; i < maze.length; i++){
+            for(j = 0; j < maze.length; j++){
+                    if(maze[i][j].getStart()){
+                        start = i + "," + j;
+                    }
+                    if(maze[i][j].getFinish()) {
+                        finish = i + "," + j;
+                    }
+                    val += "," + maze[i][j].getDir();
+                }
+            }
+        return maze.length + "," + maze[0].length + ":" + start + ":" + finish + ":" + val;
     }
 
     public static Cell[][] MazePath(Cell[][] maze){
         Random rand = new Random();
-       //System.out.println(maze.length-1);
-       //System.out.print(maze[0].length-1);
+        //System.out.println(maze.length-1);
+        //System.out.print(maze[0].length-1);
+        // generating the start. this ensures the start will be on an edge.
+        int coordinate2 = 0;
         int coordinate1 = rand.nextInt(maze.length);
-        int coordinate2 = rand.nextInt(maze[0].length);
+        if(coordinate1 == 0){
+            coordinate2 = rand.nextInt(maze[0].length);
+        }
+        maze[coordinate1][coordinate2].setFinish(true);
+
+        coordinate2 = 0;
+        coordinate1 = rand.nextInt(maze.length);
+        if(coordinate1 == 0){
+            coordinate2 = rand.nextInt(maze[0].length);
+        }
         maze[coordinate1][coordinate2].setStart(true);
+
+        // Generating the paths
         maze = MazeRecursion(maze, coordinate1, coordinate2);
         System.out.println("WE GOT OUT");
         return maze;
     }
+
     public static Cell[][] MazeRecursion(Cell[][] maze, int coordinate1, int coordinate2){
         Random rand = new Random();
         int newcoordinate1 = coordinate1; //affects the row
         int newcoordinate2 = coordinate2; //affects the column
-        int randomwalk = -1; //just so it wont yell at me
-        if(maze[coordinate1][coordinate2].getDir() == -1){
+        int randomwalk = 0; //just so it wont yell at me
+        if(coordinate1 < maze.length && maze[coordinate1][coordinate2].getDir() == -1){
             int functional = 0; //makes sure the created path is correct and dousn't create a loop or etc
             while(functional == 0) {
                 randomwalk = rand.nextInt(4);
