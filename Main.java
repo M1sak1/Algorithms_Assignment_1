@@ -169,9 +169,6 @@ public class Main {
                 maze = MazeRecursion(maze,coordinate1,newcoordinate2);
                 maze = MazeRecursion(maze,newcoordinate1,coordinate2);
             }
-            else{
-                maze = MazeRecursion(maze,newcoordinate1,newcoordinate2);
-            }
 
             if(newcoordinate1 - 1 > 0 && newcoordinate1 + 1 < maze.length){
                 if(maze[newcoordinate1 - 1][newcoordinate2].getDir() == -1){
@@ -193,71 +190,74 @@ public class Main {
         return maze;
     }
 
-    public static Cell[][] mazeRec(Cell[][] maze, int x, int y) {
+    //Inputs
+    // x -> the current x pos; y -> the current y pos | prex -> the x coord of the previous node prey -> the y coord of the previous node.
+    public static Cell[][] mazeRec(Cell[][] maze, int x, int y, int prex, int prey) {
         Random rand = new Random();
-        int shift;
+        int dir;
         boolean moved = false;
-        //This will loop until it comes accross a valid move
-        while (!moved) {
-            shift = rand.nextInt(4);
-            switch (shift) {
+        while(!moved){
+            dir = rand.nextInt(4);
+            switch(dir){
                 //up
-                case 0 -> {
-                    x--;
-                    //Check if that was a valid move
-                    if (x > 0 && x < maze.length) {
-                        moved = true;
-                        if(maze[x][y].getDir() != -1){
-                            maze[x][y].setDir(1);
+                case 0:
+                    //checking if the move is possible
+                    if ((y - 1) >= 0){
+                        //checking if the move is allowed
+                        if(maze[x][y-1].getDir() == -1 || maze[x][y-1].getDir() == 2 || maze[x][y-1].getDir() == 3){
+                            y--;    //moving
+                            //editing the current one
+                            if(maze[x][y].getDir() == -1){
+
+                            }
                         }
                     }
-                    else{
-                        x++;
-                    }
-                }
+                    break;
                 //down
-                case 1 -> {
-                    x++;
-                    //Check if that was a valid move
-                    if (x > 0 && x < maze.length) {
-                        moved = true;
-                        if(maze[x][y].getDir() != -1){
-                            maze[x][y].setDir(1);
+                case 1:
+                    //checking if the move is possible
+                    if ((y + 1) < maze[0].length){
+                        //checking if the move is allowed...
+                        if(maze[x][y+1].getDir() == -1 || maze[x][y].getDir() == 2 || maze[x][y].getDir() == 3){
+                            y++;    //moving
+                            //editing the current one
+                            if(maze[x][y].getDir() == -1){
+
+                            }
                         }
                     }
-                    else {
-                        x--;
-                    }
-                }
-                //right
-                case 2 -> {
-                    y++;
-                    //Check if that was a valid move
-                    if (y > 0 && y < maze.length) {
-                        moved = true;
-                        if(maze[x][y].getDir() != -1){
-                            maze[x][y].setDir(1);
-                        }
-                    }
-                    else {
-                        y--;
-                    }
-                }
+                    break;
                 //left
-                case 3 -> {
-                    y--;
-                    if (y > 0 && y < maze.length) {
-                        moved = true;
-                        if(maze[x][y].getDir() != -1){
-                            maze[x][y].setDir(1);
+                case 2:
+                    //checking if the move is possible
+                    if ((x - 1) >= 0){
+                        //checking if the move is allowed.
+                        if(maze[x-1][y].getDir() == -1 || maze[x-1][y].getDir() == 1 || maze[x-1][y].getDir() == 3){
+                            x--;    //moving
+                            //editing the current one
+                            if(maze[x][y].getDir() == -1){
+
+                            }
                         }
                     }
-                    else {
-                        y++;
+                    break;
+                //right
+                case 3:
+                    //checking if the move is possible
+                    if ((x + 1) < maze.length){
+                        //checking if the move is allowed...
+                        if(maze[x+1][y].getDir() == -1 || maze[x][y].getDir() == 1 || maze[x][y].getDir() == 3){
+                            x++;    //moving
+                            //editing the current one
+                            if(maze[x][y].getDir() == -1){
+
+                            }
+                        }
                     }
-                }
+                    break;
             }
         }
+        // reoccur to the new node
         // way to break the recursion.
         return maze;
     }
