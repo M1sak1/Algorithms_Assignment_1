@@ -66,19 +66,28 @@ public class Main {
         //System.out.println(maze.length-1);
         //System.out.print(maze[0].length-1);
         // generating the start. this ensures the start will be on an edge.
+        // this also ensures the start and end are diff.
         int coordinate2 = 0;
         int coordinate1 = rand.nextInt(maze.length);
         if(coordinate1 == 0){
             coordinate2 = rand.nextInt(maze[0].length);
         }
         maze[coordinate1][coordinate2].setFinish(true);
+        Cell fin = maze[coordinate1][coordinate2];
 
-        coordinate2 = 0;
-        coordinate1 = rand.nextInt(maze.length);
-        if(coordinate1 == 0){
-            coordinate2 = rand.nextInt(maze[0].length);
+        boolean diffStart = false;
+        while(!diffStart) {
+            coordinate2 = 0;
+            coordinate1 = rand.nextInt(maze.length);
+            if (coordinate1 == 0) {
+                coordinate2 = rand.nextInt(maze[0].length);
+            }
+            if(maze[coordinate1][coordinate2] != fin){
+                maze[coordinate1][coordinate2].setStart(true);
+                diffStart = true;
+            }
         }
-        maze[coordinate1][coordinate2].setStart(true);
+        // == What you see above you is so dumb but it works == //
 
         // Generating the paths
         maze = MazeRecursion(maze, coordinate1, coordinate2);
@@ -91,7 +100,7 @@ public class Main {
         int newcoordinate1 = coordinate1; //affects the row
         int newcoordinate2 = coordinate2; //affects the column
         int randomwalk = 0; //just so it wont yell at me
-        if(coordinate1 < maze.length && maze[coordinate1][coordinate2].getDir() == -1){
+        if((coordinate1 < maze.length && coordinate2 < maze[0].length) && maze[coordinate1][coordinate2].getDir() == -1){
             int functional = 0; //makes sure the created path is correct and dousn't create a loop or etc
             while(functional == 0) {
                 randomwalk = rand.nextInt(4);
