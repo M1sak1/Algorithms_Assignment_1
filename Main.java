@@ -97,6 +97,7 @@ public class Main {
 
         // Generating the paths
         maze = MazeRecursion(maze, coordinate1, coordinate2);
+        // maze = mazeRec(maze, coordinate1, coordinate2);
         System.out.println("WE GOT OUT");
         return maze;
     }
@@ -113,42 +114,57 @@ public class Main {
                 switch (randomwalk){
                     case 0:
                         newcoordinate1 = coordinate1 - 1;
-                        newcoordinate2 = coordinate2 - 1;
+                        System.out.println("nc1: " + newcoordinate1 + " nc2: " + newcoordinate2+ " rw: " + randomwalk);
                         if(newcoordinate1 >= 0 && newcoordinate2 >= 0){ //checks if the cell is in the top left
                             maze[coordinate1][coordinate2].setDir(randomwalk);
                             functional = 1;
                             break;
                         }
+                        else{
+                            newcoordinate1++;
+                        }
                         break;
                     case 1:
-                        newcoordinate1 = coordinate2 + 1;
+                        newcoordinate1 = coordinate1 + 1;
+                        System.out.println("nc1: " + newcoordinate1 + " nc2: " + newcoordinate2+ " rw: " + randomwalk);
                         if(newcoordinate2 < maze.length){
                             maze[coordinate1][coordinate2].setDir(randomwalk);
                             functional = 1;
                             break;
                         }
+                        else{
+                            newcoordinate1--;
+                        }
                         break;
                     case 2:
-                        newcoordinate1 = coordinate1 + 1;
+                        newcoordinate2 = coordinate2 + 1;
+                        System.out.println("nc1: " + newcoordinate1 + " nc2: " + newcoordinate2+ " rw: " + randomwalk);
                         if(newcoordinate1 < maze[0].length){
                             maze[coordinate1][coordinate2].setDir(randomwalk);
                             functional = 1;
                             break;
                         }
+                        else{
+                            newcoordinate2--;
+                        }
                         break;
                     case 3:
-                        newcoordinate1 = coordinate1 + 1;
-                        newcoordinate2 = coordinate2 + 1;
+                        newcoordinate2 = coordinate2 - 1;
+                        System.out.println("nc1: " + newcoordinate1 + " nc2: " + newcoordinate2+ " rw: " + randomwalk);
                         if(newcoordinate1 < maze.length && newcoordinate2 < maze[0].length){ //checks if the cell is in the top left
                             maze[coordinate1][coordinate2].setDir(randomwalk);
                             functional = 1;
                             break;
                         }
+                        else{
+                            newcoordinate2++;
+                        }
                         break;
                 }
             }
-            System.out.print(coordinate1 + " " + coordinate2);
-            System.out.println(" " + randomwalk);
+            // System.out.println(" oc1: " + coordinate1 + " oc2: " + coordinate2);
+            // System.out.println(" rw: " + randomwalk);
+
             if(randomwalk == 0 || randomwalk == 3){
                 maze = MazeRecursion(maze,coordinate1,newcoordinate2);
                 maze = MazeRecursion(maze,newcoordinate1,coordinate2);
@@ -174,6 +190,75 @@ public class Main {
                 }
             }
         }
+        return maze;
+    }
+
+    public static Cell[][] mazeRec(Cell[][] maze, int x, int y) {
+        Random rand = new Random();
+        int shift;
+        boolean moved = false;
+        //This will loop until it comes accross a valid move
+        while (!moved) {
+            shift = rand.nextInt(4);
+            switch (shift) {
+                //up
+                case 0 -> {
+                    x--;
+                    //Check if that was a valid move
+                    if (x > 0 && x < maze.length) {
+                        moved = true;
+                        if(maze[x][y].getDir() != -1){
+                            maze[x][y].setDir(1);
+                        }
+                    }
+                    else{
+                        x++;
+                    }
+                }
+                //down
+                case 1 -> {
+                    x++;
+                    //Check if that was a valid move
+                    if (x > 0 && x < maze.length) {
+                        moved = true;
+                        if(maze[x][y].getDir() != -1){
+                            maze[x][y].setDir(1);
+                        }
+                    }
+                    else {
+                        x--;
+                    }
+                }
+                //right
+                case 2 -> {
+                    y++;
+                    //Check if that was a valid move
+                    if (y > 0 && y < maze.length) {
+                        moved = true;
+                        if(maze[x][y].getDir() != -1){
+                            maze[x][y].setDir(1);
+                        }
+                    }
+                    else {
+                        y--;
+                    }
+                }
+                //left
+                case 3 -> {
+                    y--;
+                    if (y > 0 && y < maze.length) {
+                        moved = true;
+                        if(maze[x][y].getDir() != -1){
+                            maze[x][y].setDir(1);
+                        }
+                    }
+                    else {
+                        y++;
+                    }
+                }
+            }
+        }
+        // way to break the recursion.
         return maze;
     }
 
