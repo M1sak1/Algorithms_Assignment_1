@@ -193,6 +193,8 @@ public class Main {
     //Inputs
     // x -> the current x pos; y -> the current y pos | prex -> the x coord of the previous node prey -> the y coord of the previous node.
     public static Cell[][] mazeRec(Cell[][] maze, int x, int y, int prex, int prey) {
+        int holx = x;
+        int holy = y;
         Random rand = new Random();
         int dir;
         boolean moved = false;
@@ -208,7 +210,7 @@ public class Main {
                             y--;    //moving
                             //editing the current one
                             if(maze[x][y].getDir() == -1){
-
+                                //deciding what to put in this node
                             }
                         }
                     }
@@ -222,7 +224,7 @@ public class Main {
                             y++;    //moving
                             //editing the current one
                             if(maze[x][y].getDir() == -1){
-
+                                //deciding what to put in this node
                             }
                         }
                     }
@@ -236,7 +238,7 @@ public class Main {
                             x--;    //moving
                             //editing the current one
                             if(maze[x][y].getDir() == -1){
-
+                                //deciding what to put in this node
                             }
                         }
                     }
@@ -250,7 +252,7 @@ public class Main {
                             x++;    //moving
                             //editing the current one
                             if(maze[x][y].getDir() == -1){
-
+                                //deciding what to put in this node
                             }
                         }
                     }
@@ -258,7 +260,11 @@ public class Main {
             }
         }
         // reoccur to the new node
-        // way to break the recursion.
+        // way to break the recursion
+        // this was my idea, it would only reoccur if would make a dif.
+        if((x != holx) || (y != holy)){
+            maze = mazeRec(maze, x, y, holx, holy);
+        }
         return maze;
     }
 
