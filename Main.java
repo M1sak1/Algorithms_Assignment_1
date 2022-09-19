@@ -1,61 +1,66 @@
-import java.util.Random;
 import java.util.Scanner;
-
+import java.util.Random;
 public class Main {
     //lmao I have totally forgotten how to use java
     public static void main(String[] args) {
         Scanner imp = new Scanner(System.in);
-        System.out.println("input maze size (Please only input a single int)");
+        System.out.println("input maze size row (Please only input a single int)");
         String mazeSizeRaw = imp.nextLine();
         int mazeSize = Integer.parseInt(mazeSizeRaw);
-        Cell[][] maze = makeMaze(mazeSize);
-        System.out.println(maze[0].length);
-        maze = GenPaths(maze);
-        print(maze);
+        Scanner imp2 = new Scanner(System.in);
+        System.out.println("input maze size column (Please only input a single int)");
+        int mazeSize2 = Integer.parseInt(imp2.nextLine());
+
+
+        Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
+        maze = MazePath(maze);
         // System.out.println(maze);
     }
     //This creates a completely open maze. every value is set to 3.
-    public static Cell[][] makeMaze(int size){
-        Cell[][] maze = new Cell[size][size];
+    public static Cell[][] makeMaze(int size1, int size2){
+        Cell[][] maze = new Cell[size1][size2];
         int i = 0;
         int j = 0;
-        for(i = 0; i < size; i++){
-            for(j = 0; j < size; j++){
+        for(i = 0; i < size1; i++){
+            for(j = 0; j < size2; j++){
                 maze[i][j] = new Cell();
             }
         }
         return maze;
     }
     //does nothing as yet
-    public static Cell[][] GenPaths(Cell[][] blankMaze){
-        Cell[][] popMaze = blankMaze;
-        boolean Finished = false;
-        Random rand = new Random();
-        int rnum = 0;
-        // Creating the start and end points
-
-        // How to generate a path.
-        // General idea, 0 - Go up, 1 - Go right, 2 - Go down, 3 - Go left.
-        // check if it is a valid move.
-        // Move to the next position.
-        // repeat
-
-
-        System.out.println(rnum);
-
-        return popMaze;
+    public static Cell[][] GenPath(Cell[][] blankMaze){
+        return blankMaze;
     }
 
-    public static void print(Cell[][] maze){
-        String out = "";
-        int i = 0;
-        int j = 0;
-        for(i = 0; i < maze.length; i++){
-            for(j = 0; j < maze.length; j++){
-                out += maze[i][j].getDir();
+    public static Cell[][] MazePath(Cell[][] maze){
+        Random rand = new Random();
+        System.out.println(maze.length-1);
+        System.out.print(maze[0].length-1);
+        int coordinate1 = rand.nextInt(maze.length);
+        int coordinate2 = rand.nextInt(maze[0].length);
+        maze[coordinate1][coordinate2].isStart = true;
+
+        return maze;
+    }
+    public static Cell[][] MazeRecursion(Cell[][] maze, int coordinate1, int coordinate2){
+        Random rand = new Random();
+        if(maze[coordinate1][coordinate2] == null){
+            int randomwalk = rand.nextInt(4);
+            if(coordinate1 == 0 || coordinate2 == 0){
+                randomwalk = rand.nextInt(2);
             }
+            if(coordinate1 == maze.length -1 || coordinate1 == maze.length - 1){
+                randomwalk = rand.nextInt(3,5);
+            }
+            maze[coordinate1][coordinate2].dir = randomwalk;
+            //I dont really know how cells work and trying to figure out the maze through only if right or down are open is really annoying
+            //maze[coordinate1][coordinate2] = randomwalk;
+
+            //will go forever
+            //maze = MazeRecursion(maze,coordinate1,coordinate2);
         }
-        System.out.println(out);
+        return maze;
     }
 }
 
@@ -80,7 +85,6 @@ I think the word node and cell are interchanged halfway through but mean the sam
     see figure 2-3 for a visual representation
     Does seem like you can go back through the maze and break off of a previously used node in another direction that still satisfies the limitations
 
-    https://www.geeksforgeeks.org/random-walk-implementation-python/
 
     When running this program through the command line it should take the amount of rows and columns as the input and output a file name
         Should give error messages for invalid inputs
