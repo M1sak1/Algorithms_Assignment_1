@@ -113,7 +113,7 @@ public class Main {
                             functional = 1;
                             break;
                         }
-                        randomwalk = rand.nextInt(1,4); //stops it from getting the number 0 as it cant work as the cell is in the top left
+                        break;
                     case 1:
                         newcoordinate1 = coordinate2 + 1;
                         if(newcoordinate2 < maze.length){
@@ -121,7 +121,7 @@ public class Main {
                             functional = 1;
                             break;
                         }
-                        randomwalk = rand.nextInt(0,4); //sad i cant exclude 1
+                        break;
                     case 2:
                         newcoordinate1 = coordinate1 + 1;
                         if(newcoordinate1 < maze[0].length){
@@ -129,7 +129,7 @@ public class Main {
                             functional = 1;
                             break;
                         }
-                        randomwalk = rand.nextInt(0,4); //sad i cant exclude 2
+                        break;
                     case 3:
                         newcoordinate1 = coordinate1 + 1;
                         newcoordinate2 = coordinate2 + 1;
@@ -138,7 +138,7 @@ public class Main {
                             functional = 1;
                             break;
                         }
-                        randomwalk = rand.nextInt(0,3); //stops it from getting the number 3 as it cant work as the cell is in the bottom right
+                        break;
                 }
             }
             System.out.print(coordinate1 + " " + coordinate2);
