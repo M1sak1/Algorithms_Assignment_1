@@ -55,7 +55,7 @@ public class Main {
                     if(maze[i][j].getFinish()) {
                         finish = i + "," + j;
                     }
-                    val += "," + maze[i][j].getDir();
+                    val += maze[i][j].getDir() + ",";
                 }
             }
         return maze.length + "," + maze[0].length + ":" + start + ":" + finish + ":" + val;
