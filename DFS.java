@@ -17,9 +17,13 @@ public class DFS {
         }
         DFSObject DFSHolder = new DFSObject();
         MazeInformation(DFSHolder, Maze);
+
+        DFS(DFSHolder);
+        System.out.println(DFSHolder.getPath());
+        //System.out.println(DFSHolder.getSteps());
     }
 
-    public static void MazeInformation(DFSObject DFSHolder, String MazeFile){
+    public static DFSObject MazeInformation(DFSObject DFSHolder, String MazeFile){
         int whichvalue = 0;
         String output = "";
         for(int i = 0; i < MazeFile.length();i++){
@@ -42,16 +46,22 @@ public class DFS {
             }
         }
         DFSHolder.setMaze(output);
+        return DFSHolder;
     }
     public static DFSObject DFS(DFSObject DFSHolder){
-        int walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation());
+        System.out.println("Location" + DFSHolder.getLocation());
+        char walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation() - 1);
+        System.out.println(walls);
         if(DFSHolder.getLocation() == DFSHolder.getEndPosition()){
+            System.out.println("We got here from finishing it");
+
             DFSHolder.setPathSolved(true);
             DFSHolder.setPath(DFSHolder.getPath() + DFSHolder.getLocation());
             return DFSHolder;
         }
         switch(walls){
-            case 0: // right and down closed
+            case '0': // right and down closed
+                System.out.println("Case 0");
                 if(DFSHolder.getLocation() - 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - 1){
                     if(DFSHolder.getLocation() - DFSHolder.getNumColumns() < 1 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()){
                         if(DFSHolder.getLocation() - DFSHolder.getNumColumns() >= DFSHolder.getEndPosition()){
@@ -81,7 +91,8 @@ public class DFS {
                     DFS(DFSHolder);
                 }
                 break;
-            case 1: //right only open
+            case '1': //right only open
+                System.out.println("Case 1");
                 if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1) {
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() + 1);
@@ -95,7 +106,8 @@ public class DFS {
                     DFS(DFSHolder);
                 }
                 break;
-            case 2: //down only open
+            case '2': //down only open
+                System.out.println("Case 2");
                 if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns()) {
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() + DFSHolder.getNumColumns());
@@ -109,7 +121,8 @@ public class DFS {
                     DFS(DFSHolder);
                 }
                 break;
-            case 3: // both right and down open
+            case '3': // both right and down open
+                System.out.println("Case 3");
                 if(DFSHolder.getLocation() + 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1){
                     if(DFSHolder.getLocation() + DFSHolder.getNumColumns() < (DFSHolder.getNumColumns() * DFSHolder.getNumRows()) && DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns()){
                         if(DFSHolder.getLocation() + DFSHolder.getNumColumns() <= DFSHolder.getEndPosition()){

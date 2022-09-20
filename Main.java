@@ -338,6 +338,7 @@ public class Main {
                     break;
             }
         }
+        maze[row][column].setVisited(true); // should make a node that is trapped be found as visited then never tried to be entered again
         System.out.println("UnintentionalStuck");
         // reoccur to the new node
         // way to break the recursion
