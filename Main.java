@@ -19,11 +19,11 @@ public class Main {
 //    }
     public static void main(String[] args) {
         Cell[][] maze = makeMaze(3,3); //I think the row and column can be different
-        for(int i = 0; i < 20; i++) {
-            maze = MazePath(maze);
-            // System.out.println(maze);
-            PrintMaze(maze);
-        }
+        //for(int i = 0; i < 20; i++) {
+        maze = MazePath(maze);
+        // System.out.println(maze);
+        PrintMaze(maze);
+        //}
     }
     //This creates a completely open maze. every value is set to 3.
     public static Cell[][] makeMaze(int size1, int size2){
@@ -56,7 +56,7 @@ public class Main {
         String finish = "";
         int i, j;
         for(i = 0; i < maze.length; i++){
-            for(j = 0; j < maze.length; j++){
+            for(j = 0; j < maze[0].length; j++){
                     if(maze[i][j].getStart()){
                         start = i + "," + j;
                     }
@@ -99,7 +99,7 @@ public class Main {
 
         // Generating the paths
 
-        maze = mazeRec(maze, coordinate1, coordinate2, coordinate1, coordinate2);
+        maze = mazeRec(maze, coordinate1, coordinate2);
         // maze = mazeRec(maze, coordinate1, coordinate2);
         System.out.println("WE GOT OUT");
         return maze;
@@ -265,13 +265,14 @@ public class Main {
 
     //Inputs
     // row -> the current row pos; column -> the current column pos | prex -> the row coord of the previous node prey -> the column coord of the previous node.
-    public static Cell[][] mazeRec(Cell[][] maze, int row, int column, int preRow, int preCol) {
+    public static Cell[][] mazeRec(Cell[][] maze, int row, int column) {
         int olRow = row;
         int olCol = column;
         Random rand = new Random();
         int dir;
         boolean moved = false;
         dir = rand.nextInt(4);
+        System.out.println("pos: " + row + "," + column + " move: " + dir);
         switch(dir){
             //up
             case 0:
@@ -333,31 +334,52 @@ public class Main {
         // way to break the recursion
         // this was my idea, it would only reoccur if would make a dif.
         if(moved){
-            maze = mazeRec(maze, row, column, olRow, olCol );
+            maze = mazeRec(maze, row, column);
         }
         else{
             //Check if its trapped
             //if its trapped go backwards
             //its its not trapped try again.
-            if(stuck(maze, olRow, olCol, 0) && stuck(maze, olRow, olCol, 1) ){
+            if( stuck(maze, olRow, olCol, 0) && stuck(maze, olRow, olCol, 1) ){
                 return maze;
             }
             else{
-                maze = mazeRec(maze, olRow, olCol, preRow, preCol);
+                maze = mazeRec(maze, olRow, olCol);
+            }
+        }
+
+        if ( (stuck(maze, olRow, olCol, 0) && stuck(maze, olRow, olCol, 1)) ){
+            // go up if can
+            if ((row - 1) >= 0 && !maze[row- 1][column].isVisited()){
+                mazeRec(maze, row-1, column);
+            }
+            // go down if can
+            if ((row + 1) > maze.length && !maze[row + 1][column].isVisited()){
+                mazeRec(maze, row + 1, column);
+            }
+            // go left if can
+            if ((column - 1) >= 0 && !maze[row][column - 1].isVisited()){
+                mazeRec(maze, row, column - 1);
+            }
+            // go right if can
+            if ((column + 1) > maze[0].length && !maze[row][column + 1].isVisited()){
+                mazeRec(maze, row, column + 1);
             }
         }
         return maze;
     }
 
+    // if it is not stuck it will return false.
+    // if it is stuck it will return true.
     public static boolean stuck(Cell[][] maze, int row, int col, int ver){
         if(ver == 0){
-            if((row + 1) < maze[0].length && maze[row + 1][col].getDir() == -1){
+            if((row + 1) < maze.length && maze[row + 1][col].getDir() == -1){
                 return false;
             }
             return !((row - 1) >= 0 && maze[row - 1][col].getDir() == -1);
         }
         else{
-            if ((col + 1) < maze.length && maze[row][col + 1].getDir() == -1){
+            if ((col + 1) < maze[0].length && maze[row][col + 1].getDir() == -1){
                 return false;
             }
             return !((col - 1) >= 0 && maze[row][col - 1].getDir() == -1);
