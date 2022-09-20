@@ -42,7 +42,6 @@ public class DFS {
             }
         }
         DFSHolder.setMaze(output);
-        System.out.println(DFSHolder.getMaze());
     }
     public static DFSObject DFS(DFSObject DFSHolder){
         int walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation());

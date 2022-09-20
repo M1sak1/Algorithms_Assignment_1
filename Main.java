@@ -98,7 +98,7 @@ public class Main {
         // == What you see above you is so dumb but it works == //
 
         // Generating the paths
-
+        System.out.println("StartingValues " + coordinate1 + " " + coordinate2);
         maze = mazeRec(maze, coordinate1, coordinate2);
         // maze = mazeRec(maze, coordinate1, coordinate2);
         System.out.println("WE GOT OUT");
@@ -266,106 +266,82 @@ public class Main {
     //Inputs
     // row -> the current row pos; column -> the current column pos | prex -> the row coord of the previous node prey -> the column coord of the previous node.
     public static Cell[][] mazeRec(Cell[][] maze, int row, int column) {
-        int olRow = row;
-        int olCol = column;
         Random rand = new Random();
         int dir;
         boolean moved = false;
-        dir = rand.nextInt(4);
-        System.out.println("pos: " + row + "," + column + " move: " + dir);
-        switch(dir){
-            //up
-            case 0:
-                //checking if the move is possible
-                if ((row - 1) >= 0 && !maze[row- 1][column].isVisited()){
-                    //Checking if it is an allowed move.
-                    maze[row][column].setVisited(true);
-                    maze[row][column].setUp(true);
-                    maze[row][column].genDir();
-                    row--;
-                    maze[row][column].setDown(true);
-                    maze[row][column].genDir();
-                    moved = true;
-                }
-                break;
-            //down
-            case 1:
-                //checking if the move is possible
-                if ((row + 1) < maze.length && !maze[row + 1][column].isVisited()){
-                    //Checking if it is an allowed move.
-                    maze[row][column].setVisited(true);
-                    maze[row][column].setDown(true);
-                    maze[row][column].genDir();
-                    row++;
-                    maze[row][column].setUp(true);
-                    maze[row][column].genDir();
-                    moved = true;
-                }
-                break;
-            //left
-            case 2:
-                //checking if the move is possible
-                if ((column - 1) >= 0 && !maze[row][column - 1].isVisited()){
-                    //Checking if it is an allowed move.
-                    maze[row][column].setVisited(true);
-                    maze[row][column].setLeft(true);
-                    maze[row][column].genDir();
-                    column--;
-                    maze[row][column].setRight(true);
-                    maze[row][column].genDir();
-                    moved = true;
-                }
-                break;
-            //right
-            case 3:
-                //checking if the move is possible
-                if ((column + 1) < maze[0].length && !maze[row][column+1].isVisited()){
-                    maze[row][column].setVisited(true);
-                    maze[row][column].setRight(true);
-                    maze[row][column].genDir();
-                    column++;
-                    maze[row][column].setLeft(true);
-                    maze[row][column].genDir();
-                    moved = true;
-                }
-                break;
+        while(!stuck(maze, row, column, 0) || !stuck(maze, row, column, 1)) {
+            dir = rand.nextInt(4);
+            System.out.println("pos: " + row + "," + column + " move: " + dir);
+            switch (dir) {
+                //up
+                case 0:
+                    //checking if the move is possible
+                    if ((row - 1) >= 0 && !maze[row - 1][column].isVisited()) {
+                        System.out.println("moved");
+                        //Checking if it is an allowed move.
+                        maze[row][column].setVisited(true);
+                        maze[row][column].setUp(true);
+                        maze[row][column].genDir();
+                        row--;
+                        maze[row][column].setDown(true);
+                        maze[row][column].genDir();
+                        maze = mazeRec(maze, row, column);
+                        row++;
+                    }
+                    break;
+                //down
+                case 1:
+                    //checking if the move is possible
+                    if ((row + 1) < maze.length && !maze[row + 1][column].isVisited()) {
+                        System.out.println("moved");
+                        //Checking if it is an allowed move.
+                        maze[row][column].setVisited(true);
+                        maze[row][column].setDown(true);
+                        maze[row][column].genDir();
+                        row++;
+                        maze[row][column].setUp(true);
+                        maze[row][column].genDir();
+                        maze = mazeRec(maze, row, column);
+                        row--;
+                    }
+                    break;
+                //left
+                case 2:
+                    //checking if the move is possible
+                    if ((column - 1) >= 0 && !maze[row][column - 1].isVisited()) {
+                        System.out.println("moved");
+                        //Checking if it is an allowed move.
+                        maze[row][column].setVisited(true);
+                        maze[row][column].setLeft(true);
+                        maze[row][column].genDir();
+                        column--;
+                        maze[row][column].setRight(true);
+                        maze[row][column].genDir();
+                        maze = mazeRec(maze, row, column);
+                        column++;
+                    }
+                    break;
+                //right
+                case 3:
+                    //checking if the move is possible
+                    if ((column + 1) < maze[0].length && !maze[row][column + 1].isVisited()) {
+                        System.out.println("moved");
+                        maze[row][column].setVisited(true);
+                        maze[row][column].setRight(true);
+                        maze[row][column].genDir();
+                        column++;
+                        maze[row][column].setLeft(true);
+                        maze[row][column].genDir();
+                        maze = mazeRec(maze, row, column);
+                        column--;
+                    }
+                    break;
+            }
         }
+        System.out.println("UnintentionalStuck");
         // reoccur to the new node
         // way to break the recursion
         // this was my idea, it would only reoccur if would make a dif.
-        if(moved){
-            maze = mazeRec(maze, row, column);
-        }
-        else{
-            //Check if its trapped
-            //if its trapped go backwards
-            //its its not trapped try again.
-            if( stuck(maze, olRow, olCol, 0) && stuck(maze, olRow, olCol, 1) ){
-                return maze;
-            }
-            else{
-                maze = mazeRec(maze, olRow, olCol);
-            }
-        }
-
-        if ( (stuck(maze, olRow, olCol, 0) && stuck(maze, olRow, olCol, 1)) ){
-            // go up if can
-            if ((row - 1) >= 0 && !maze[row- 1][column].isVisited()){
-                mazeRec(maze, row-1, column);
-            }
-            // go down if can
-            if ((row + 1) > maze.length && !maze[row + 1][column].isVisited()){
-                mazeRec(maze, row + 1, column);
-            }
-            // go left if can
-            if ((column - 1) >= 0 && !maze[row][column - 1].isVisited()){
-                mazeRec(maze, row, column - 1);
-            }
-            // go right if can
-            if ((column + 1) > maze[0].length && !maze[row][column + 1].isVisited()){
-                mazeRec(maze, row, column + 1);
-            }
-        }
         return maze;
     }
 

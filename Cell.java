@@ -8,6 +8,7 @@ public class Cell {
     boolean isStart = false;
     boolean isFinish = false;
     boolean Isloop = false;
+    boolean visited = false;
 
     public boolean isVisited() {
         return visited;
@@ -17,7 +18,7 @@ public class Cell {
         this.visited = visited;
     }
 
-    boolean visited = false;
+
 
     public boolean isLeft() {
         return left;
