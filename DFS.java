@@ -25,17 +25,14 @@ public class DFS {
         for(int i = 0; i < MazeFile.length();i++){
             if(Character.compare(MazeFile.charAt(i),':') == 0){
                 if(whichvalue == 0){
-                    DFSHolder.setNumRows(Integer.parseInt(output.substring(0,output.indexOf(','))));
-                    DFSHolder.setNumColumns(Integer.parseInt(output.substring(output.indexOf(','))));
-                    System.out.println(output);
-                    System.out.println(DFSHolder.getNumRows());
-                    System.out.println(DFSHolder.getNumColumns());
+                    DFSHolder.setNumRows(Integer.parseInt(output.substring(0,output.indexOf(',')))); //grabs the number of rows and converts into an int
+                    DFSHolder.setNumColumns(Integer.parseInt(output.substring(output.indexOf(',') + 1))); //grabs the number of columns and converts into an int
                 }
                 if(whichvalue == 1){
-                    System.out.println(output);
+                    DFSHolder.setLocation(Integer.parseInt(output));
                 }
                 if(whichvalue == 2){
-                    System.out.println(output);
+                    DFSHolder.setEndPosition(Integer.parseInt(output));
                 }
                 whichvalue++;
                 output = "";
@@ -44,9 +41,109 @@ public class DFS {
                 output += MazeFile.charAt(i);
             }
         }
-        System.out.println(output);
+        DFSHolder.setMaze(output);
+        System.out.println(DFSHolder.getMaze());
     }
     public static DFSObject DFS(DFSObject DFSHolder){
+        int walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation());
+        if(DFSHolder.getLocation() == DFSHolder.getEndPosition()){
+            DFSHolder.setPathSolved(true);
+            DFSHolder.setPath(DFSHolder.getPath() + DFSHolder.getLocation());
+            return DFSHolder;
+        }
+        switch(walls){
+            case 0: // right and down closed
+                if(DFSHolder.getLocation() - 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - 1){
+                    if(DFSHolder.getLocation() - DFSHolder.getNumColumns() < 1 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()){
+                        if(DFSHolder.getLocation() - DFSHolder.getNumColumns() >= DFSHolder.getEndPosition()){
+                            DFSHolder.setPreLocation(DFSHolder.getLocation());
+                            DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
+                            DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                            DFS(DFSHolder);
+                        }
+                        else{
+                            DFSHolder.setPreLocation(DFSHolder.getLocation());
+                            DFSHolder.setLocation(DFSHolder.getLocation() - 1);
+                            DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                            DFS(DFSHolder);
+                        }
+                    }
+                    else{
+                        DFSHolder.setPreLocation(DFSHolder.getLocation());
+                        DFSHolder.setLocation(DFSHolder.getLocation() - 1);
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS(DFSHolder);
+                    }
+                }
+                else{
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
+                }
+                break;
+            case 1: //right only open
+                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1) {
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() + 1);
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
+                }
+                else{ //going left
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() - 1);
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
+                }
+                break;
+            case 2: //down only open
+                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns()) {
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() + DFSHolder.getNumColumns());
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
+                }
+                else{ //going up
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
+                }
+                break;
+            case 3: // both right and down open
+                if(DFSHolder.getLocation() + 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1){
+                    if(DFSHolder.getLocation() + DFSHolder.getNumColumns() < (DFSHolder.getNumColumns() * DFSHolder.getNumRows()) && DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns()){
+                        if(DFSHolder.getLocation() + DFSHolder.getNumColumns() <= DFSHolder.getEndPosition()){
+                            DFSHolder.setPreLocation(DFSHolder.getLocation());
+                            DFSHolder.setLocation(DFSHolder.getLocation() + DFSHolder.getNumColumns());
+                            DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                            DFS(DFSHolder);
+                        }
+                        else{
+                            DFSHolder.setPreLocation(DFSHolder.getLocation());
+                            DFSHolder.setLocation(DFSHolder.getLocation() + 1);
+                            DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                            DFS(DFSHolder);
+                        }
+                    }
+                    else{
+                        DFSHolder.setPreLocation(DFSHolder.getLocation());
+                        DFSHolder.setLocation(DFSHolder.getLocation() + 1);
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS(DFSHolder);
+                    }
+                }
+                else{
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() + DFSHolder.getNumColumns());
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
+                }
+                break;
+        }
+        if(DFSHolder.isPathSolved()){
+            DFSHolder.setPath(DFSHolder.getPreLocation() + DFSHolder.getPath());
+        }
         return DFSHolder;
     }
 }

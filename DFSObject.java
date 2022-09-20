@@ -8,6 +8,8 @@ public class DFSObject {
     int numRows = 0;
     int numColumns = 0;
 
+    boolean PathSolved = false;
+
 
     public String getMaze() {
         return Maze;
@@ -71,5 +73,13 @@ public class DFSObject {
 
     public void setNumColumns(int numColumns) {
         this.numColumns = numColumns;
+    }
+
+    public boolean isPathSolved() {
+        return PathSolved;
+    }
+
+    public void setPathSolved(boolean pathSolved) {
+        PathSolved = pathSolved;
     }
 }
