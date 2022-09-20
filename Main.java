@@ -19,9 +19,11 @@ public class Main {
 //    }
     public static void main(String[] args) {
         Cell[][] maze = makeMaze(3,3); //I think the row and column can be different
-        maze = MazePath(maze);
-        // System.out.println(maze);
-        PrintMaze(maze);
+        for(int i = 0; i < 20; i++) {
+            maze = MazePath(maze);
+            // System.out.println(maze);
+            PrintMaze(maze);
+        }
     }
     //This creates a completely open maze. every value is set to 3.
     public static Cell[][] makeMaze(int size1, int size2){
@@ -341,7 +343,7 @@ public class Main {
                 return maze;
             }
             else{
-                maze = mazeRec(maze, preRow, preCol, preRow, preCol);
+                maze = mazeRec(maze, olRow, olCol, preRow, preCol);
             }
         }
         return maze;
