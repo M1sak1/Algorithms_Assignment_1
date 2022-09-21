@@ -20,25 +20,25 @@ public class DFS {
 
         DFS(DFSHolder);
         System.out.println(DFSHolder.getPath());
-        //System.out.println(DFSHolder.getSteps());
+        System.out.println(DFSHolder.getSteps());
     }
 
     public static DFSObject MazeInformation(DFSObject DFSHolder, String MazeFile){
-        int whichvalue = 0;
+        int whichValue = 0;
         String output = "";
         for(int i = 0; i < MazeFile.length();i++){
             if(Character.compare(MazeFile.charAt(i),':') == 0){
-                if(whichvalue == 0){
+                if(whichValue == 0){
                     DFSHolder.setNumRows(Integer.parseInt(output.substring(0,output.indexOf(',')))); //grabs the number of rows and converts into an int
                     DFSHolder.setNumColumns(Integer.parseInt(output.substring(output.indexOf(',') + 1))); //grabs the number of columns and converts into an int
                 }
-                if(whichvalue == 1){
+                if(whichValue == 1){
                     DFSHolder.setLocation(Integer.parseInt(output));
                 }
-                if(whichvalue == 2){
+                if(whichValue == 2){
                     DFSHolder.setEndPosition(Integer.parseInt(output));
                 }
-                whichvalue++;
+                whichValue++;
                 output = "";
             }
             else{
@@ -49,42 +49,29 @@ public class DFS {
         return DFSHolder;
     }
     public static DFSObject DFS(DFSObject DFSHolder){
-        System.out.println("Location" + DFSHolder.getLocation());
-        char walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation() - 1);
+        System.out.println("Location " + DFSHolder.getLocation());
+        int currentLoc = DFSHolder.getLocation();
+        char walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation() - 1); // char list is from 0 and location goes from 1 and getmaze is a string of the walls
         System.out.println(walls);
         if(DFSHolder.getLocation() == DFSHolder.getEndPosition()){
             System.out.println("We got here from finishing it");
-
             DFSHolder.setPathSolved(true);
             DFSHolder.setPath(DFSHolder.getPath() + DFSHolder.getLocation());
             return DFSHolder;
         }
         switch(walls){
             case '0': // right and down closed
+                //if(DFSHolder.getLocation() - DFSHolder.getNumColumns() < 1 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()){
+                //if(DFSHolder.getLocation() - DFSHolder.getNumColumns() >= DFSHolder.getEndPosition()){
+                //Only option is left or up and one is where you came from. Or you hit in a courner and cant break out
                 System.out.println("Case 0");
-                if(DFSHolder.getLocation() - 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - 1){
-                    if(DFSHolder.getLocation() - DFSHolder.getNumColumns() < 1 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()){
-                        if(DFSHolder.getLocation() - DFSHolder.getNumColumns() >= DFSHolder.getEndPosition()){
-                            DFSHolder.setPreLocation(DFSHolder.getLocation());
-                            DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
-                            DFSHolder.setSteps(DFSHolder.getSteps() + 1);
-                            DFS(DFSHolder);
-                        }
-                        else{
-                            DFSHolder.setPreLocation(DFSHolder.getLocation());
-                            DFSHolder.setLocation(DFSHolder.getLocation() - 1);
-                            DFSHolder.setSteps(DFSHolder.getSteps() + 1);
-                            DFS(DFSHolder);
-                        }
-                    }
-                    else{
-                        DFSHolder.setPreLocation(DFSHolder.getLocation());
-                        DFSHolder.setLocation(DFSHolder.getLocation() - 1);
-                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
-                        DFS(DFSHolder);
-                    }
+                if(DFSHolder.getLocation() - 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - 1) { //can actually go left ,and it's not where you came from
+                    DFSHolder.setPreLocation(DFSHolder.getLocation());
+                    DFSHolder.setLocation(DFSHolder.getLocation() - 1);
+                    DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                    DFS(DFSHolder);
                 }
-                else{
+                else if(DFSHolder.getLocation() - DFSHolder.getNumColumns() >= 1 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()){ //can go up and it's not the pre location
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
                     DFSHolder.setSteps(DFSHolder.getSteps() + 1);
@@ -93,13 +80,36 @@ public class DFS {
                 break;
             case '1': //right only open
                 System.out.println("Case 1");
-                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1) {
+                //If both left and right are valid options to travers this will compute the best one to go in hopes we get to the end the fastest
+                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1 && DFSHolder.getLocation() - 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - 1){
+                    if(DFSHolder.getLocation() % DFSHolder.getNumColumns() <= DFSHolder.getEndPosition() % DFSHolder.getNumColumns()){
+                        //a number divided by the columns will always have the same decimals as the number a column below, therefore we can observe the decimals of our current position to determine if going left or right would be the better option
+                        DFSHolder.setPreLocation(DFSHolder.getLocation());
+                        DFSHolder.setLocation(DFSHolder.getLocation() + 1);
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS(DFSHolder);
+                        if(DFSHolder.isPathSolved()){
+                            break;
+                        }
+                        //then if we haven't solved it we try to go the other way
+                        DFSHolder.setPreLocation(DFSHolder.getLocation());
+                        DFSHolder.setLocation(DFSHolder.getLocation() - 1);
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS(DFSHolder);
+                    }
+
+                }
+                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1) { //try down
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() + 1);
                     DFSHolder.setSteps(DFSHolder.getSteps() + 1);
                     DFS(DFSHolder);
                 }
-                else{ //going left
+                if(DFSHolder.isPathSolved()){
+                    break;
+                }
+                //then we try up
+                if(DFSHolder.getLocation() - 1 % DFSHolder.getNumColumns() != 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - 1 ) { //going left and checks if possible
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() - 1);
                     DFSHolder.setSteps(DFSHolder.getSteps() + 1);
@@ -108,13 +118,35 @@ public class DFS {
                 break;
             case '2': //down only open
                 System.out.println("Case 2");
-                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns()) {
+                //checks if both down and up are available options
+                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns() && DFSHolder.getLocation() - DFSHolder.getNumColumns() > 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()) {
+                    if(DFSHolder.getLocation() + DFSHolder.getNumColumns() <= DFSHolder.getEndPosition()) {
+                        DFSHolder.setPreLocation(DFSHolder.getLocation());
+                        DFSHolder.setLocation(DFSHolder.getLocation() + DFSHolder.getNumColumns());
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS(DFSHolder);
+                        if(DFSHolder.isPathSolved()){
+                            break;
+                        }
+                        //then if we haven't solved it we try to go the other way
+                        DFSHolder.setPreLocation(DFSHolder.getLocation());
+                        DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS(DFSHolder);
+                    }
+                }
+                if(DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns()){ //going down
+                    System.out.println(DFSHolder.getLocation() + " down");
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() + DFSHolder.getNumColumns());
                     DFSHolder.setSteps(DFSHolder.getSteps() + 1);
                     DFS(DFSHolder);
                 }
-                else{ //going up
+                if(DFSHolder.isPathSolved()){
+                    break;
+                }
+                if( DFSHolder.getLocation() - DFSHolder.getNumColumns() > 0 && DFSHolder.getPreLocation() != DFSHolder.getLocation() - DFSHolder.getNumColumns()){
+                    System.out.println(DFSHolder.getLocation() + " up");
                     DFSHolder.setPreLocation(DFSHolder.getLocation());
                     DFSHolder.setLocation(DFSHolder.getLocation() - DFSHolder.getNumColumns());
                     DFSHolder.setSteps(DFSHolder.getSteps() + 1);
@@ -154,7 +186,7 @@ public class DFS {
                 break;
         }
         if(DFSHolder.isPathSolved()){
-            DFSHolder.setPath(DFSHolder.getPreLocation() + DFSHolder.getPath());
+            DFSHolder.setPath(currentLoc + DFSHolder.getPath());
         }
         return DFSHolder;
     }

@@ -18,7 +18,7 @@ public class Main {
 //        PrintMaze(maze);
 //    }
     public static void main(String[] args) {
-        Cell[][] maze = makeMaze(3,3); //I think the row and column can be different
+        Cell[][] maze = makeMaze(3,9); //I think the row and column can be different
         //for(int i = 0; i < 20; i++) {
         maze = MazePath(maze);
         // System.out.println(maze);
@@ -58,12 +58,16 @@ public class Main {
         for(i = 0; i < maze.length; i++){
             for(j = 0; j < maze[0].length; j++){
                     if(maze[i][j].getStart()){
-                        start = i + "," + j;
+                         //since dfs works from 1 not zero
+                        //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
+                        start = "" + (i * maze[0].length + j);
+                        System.out.println(i + " "+j);
                     }
                     if(maze[i][j].getFinish()) {
-                        finish = i + "," + j;
+                        System.out.println(i + " "+j);
+                        finish = ""+ (i * maze[0].length + j);
                     }
-                    val += maze[i][j].getDir() + ",";
+                    val += maze[i][j].getDir();
                 }
             }
         return maze.length + "," + maze[0].length + ":" + start + ":" + finish + ":" + val;
@@ -269,7 +273,9 @@ public class Main {
         Random rand = new Random();
         int dir;
         boolean moved = false;
+        int stuckInitially = 0; //to determine what the finish is
         while(!stuck(maze, row, column, 0) || !stuck(maze, row, column, 1)) {
+            stuckInitially = 1; // not initially stuck and won't qualify for being the finish
             dir = rand.nextInt(4);
             System.out.println("pos: " + row + "," + column + " move: " + dir);
             switch (dir) {
@@ -338,6 +344,9 @@ public class Main {
                     break;
             }
         }
+        //if(stuckInitially == 0){
+        //    maze[row][column].setFinish(true);
+       // }
         maze[row][column].setVisited(true); // should make a node that is trapped be found as visited then never tried to be entered again
         System.out.println("UnintentionalStuck");
         // reoccur to the new node
