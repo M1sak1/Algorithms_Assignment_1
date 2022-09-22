@@ -2,29 +2,29 @@ import java.util.Scanner;
 import java.util.Random;
 public class Main {
     //lmao I have totally forgotten how to use java
-//    public static void main(String[] args) {
-//        Scanner imp = new Scanner(System.in);
-//        System.out.println("input maze size row (Please only input a single int)");
-//        String mazeSizeRaw = imp.nextLine();
-//        int mazeSize = Integer.parseInt(mazeSizeRaw);
-//        Scanner imp2 = new Scanner(System.in);
-//        System.out.println("input maze size column (Please only input a single int)");
-//        int mazeSize2 = Integer.parseInt(imp2.nextLine());
-//
-//
-//        Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
-//        maze = MazePath(maze);
-//        // System.out.println(maze);
-//        PrintMaze(maze);
-//    }
     public static void main(String[] args) {
-        Cell[][] maze = makeMaze(3,3); //I think the row and column can be different
-        //for(int i = 0; i < 20; i++) {
+        Scanner imp = new Scanner(System.in);
+        System.out.println("input maze size row (Please only input a single int)");
+        String mazeSizeRaw = imp.nextLine();
+        int mazeSize = Integer.parseInt(mazeSizeRaw);
+        Scanner imp2 = new Scanner(System.in);
+        System.out.println("input maze size column (Please only input a single int)");
+        int mazeSize2 = Integer.parseInt(imp2.nextLine());
+
+
+        Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
         maze = MazePath(maze);
         // System.out.println(maze);
         PrintMaze(maze);
-        //}
     }
+//    public static void main(String[] args) {
+//        Cell[][] maze = makeMaze(5,3); //I think the row and column can be different
+//        //for(int i = 0; i < 20; i++) {
+//        maze = MazePath(maze);
+//        // System.out.println(maze);
+//        PrintMaze(maze);
+//        //}
+//    }
     //This creates a completely open maze. every value is set to 3.
     public static Cell[][] makeMaze(int size1, int size2){
         Cell[][] maze = new Cell[size1][size2];
@@ -58,12 +58,12 @@ public class Main {
         for(i = 0; i < maze.length; i++){
             for(j = 0; j < maze[0].length; j++){
                     if(maze[i][j].getStart()){
-                        start = i + "," + j;
+                        start = String.valueOf((i + 1) * (j + 1));
                     }
                     if(maze[i][j].getFinish()) {
-                        finish = i + "," + j;
+                        finish = String.valueOf((i + 1) * (j + 1));
                     }
-                    val += maze[i][j].getDir() + ",";
+                    val += maze[i][j].getDir();
                 }
             }
         return maze.length + "," + maze[0].length + ":" + start + ":" + finish + ":" + val;
