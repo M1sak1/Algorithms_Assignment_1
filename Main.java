@@ -42,8 +42,6 @@ public class Main {
     // file format -> n,m:start:finish:maze
     public static void PrintMaze(Cell[][] maze){
         String totalpath = "";
-        boolean found = false;
-        int i, j;
         totalpath = findIndx(maze);
         System.out.println(totalpath);
         //print to a file
@@ -86,7 +84,6 @@ public class Main {
             coordinate2 = rand.nextInt(maze[0].length);
         }
         maze[coordinate1][coordinate2].setFinish(true);
-        Cell fin = maze[coordinate1][coordinate2];
 
         boolean diffStart = false;
         while(!diffStart) {
