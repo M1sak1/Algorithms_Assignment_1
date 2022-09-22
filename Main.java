@@ -57,10 +57,11 @@ public class Main {
         int i, j;
         for(i = 0; i < maze.length; i++){
             for(j = 0; j < maze[0].length; j++){
-                    if(maze[i][j].getFinish()) {
+                    if(maze[i][j].getStart()) {
                         //since dfs works from 1 not zero
                         //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
                         start = "" + (i * maze[0].length + j);
+                        //start = "" + (i) * (j);
                         System.out.println(i + " "+j);
                     }
                     if(maze[i][j].getFinish()) {
@@ -89,15 +90,16 @@ public class Main {
 
         boolean diffStart = false;
         while(!diffStart) {
-            coordinate2 = 0;
-            coordinate1 = rand.nextInt(maze.length);
-            if (coordinate1 == 0) {
-                coordinate2 = rand.nextInt(maze[0].length);
+            coordinate2 = rand.nextInt(maze.length);
+            coordinate1 = 0;
+            if(coordinate2 == 0){
+                coordinate1 = rand.nextInt(maze[0].length);
             }
-            if(maze[coordinate1][coordinate2] != fin){
+            if(!maze[coordinate1][coordinate2].isFinish){
                 maze[coordinate1][coordinate2].setStart(true);
                 diffStart = true;
             }
+            System.out.println(coordinate1 + " " + coordinate2);
         }
         // == What you see above you is so dumb but it works == //
 
