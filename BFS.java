@@ -126,7 +126,7 @@ public class BFS {
             //Left
             case 2:
                 // check if the move is possible
-                if(Col - 1 > 0){
+                if(Col - 1 >= 0){
                     if (maze[Row][Col - 1] == 1 || maze[Row][Col - 1] == 3){
                         if(!visList[Row][Col - 1]){
                             return true;
@@ -137,7 +137,7 @@ public class BFS {
             //Up
             case 3:
                 //checking if the move is possible
-                if(Row - 1 > 0){
+                if(Row - 1 >= 0){
                     if(maze[Row - 1][Col] == 2 || maze[Row - 1][Col] == 3){
                         if(!visList[Row - 1][Col]){
                             return true;
