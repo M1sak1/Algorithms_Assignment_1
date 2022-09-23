@@ -44,7 +44,7 @@ public class Main {
     // file format -> n,m:start:finish:maze
     public static void PrintMaze(Cell[][] maze, String outputName) throws IOException {
         String totalpath = Print(maze);
-        System.out.println(totalpath);
+        //System.out.println(totalpath);
         PrintWriter writer = new PrintWriter(outputName, StandardCharsets.UTF_8);
         writer.println(totalpath);
         writer.close();
@@ -280,13 +280,13 @@ public class Main {
         while(!stuck(maze, row, column, 0) || !stuck(maze, row, column, 1)) {
             stuckInitially = 1; // not initially stuck and won't qualify for being the finish
             dir = rand.nextInt(4);
-            System.out.println("pos: " + row + "," + column + " move: " + dir);
+            //System.out.println("pos: " + row + "," + column + " move: " + dir);
             switch (dir) {
                 //up
                 case 0:
                     //checking if the move is possible
                     if ((row - 1) >= 0 && !maze[row - 1][column].isVisited()) {
-                        System.out.println("moved");
+                        //System.out.println("moved");
                         //Checking if it is an allowed move.
                         maze[row][column].setVisited(true);
                         maze[row][column].setUp(true);
@@ -302,7 +302,7 @@ public class Main {
                 case 1:
                     //checking if the move is possible
                     if ((row + 1) < maze.length && !maze[row + 1][column].isVisited()) {
-                        System.out.println("moved");
+                        //System.out.println("moved");
                         //Checking if it is an allowed move.
                         maze[row][column].setVisited(true);
                         maze[row][column].setDown(true);
@@ -318,7 +318,7 @@ public class Main {
                 case 2:
                     //checking if the move is possible
                     if ((column - 1) >= 0 && !maze[row][column - 1].isVisited()) {
-                        System.out.println("moved");
+                        //System.out.println("moved");
                         //Checking if it is an allowed move.
                         maze[row][column].setVisited(true);
                         maze[row][column].setLeft(true);
@@ -334,7 +334,7 @@ public class Main {
                 case 3:
                     //checking if the move is possible
                     if ((column + 1) < maze[0].length && !maze[row][column + 1].isVisited()) {
-                        System.out.println("moved");
+                        //System.out.println("moved");
                         maze[row][column].setVisited(true);
                         maze[row][column].setRight(true);
                         maze[row][column].genDir();
@@ -351,7 +351,7 @@ public class Main {
         //    maze[row][column].setFinish(true);
        // }
         maze[row][column].setVisited(true); // should make a node that is trapped be found as visited then never tried to be entered again
-        System.out.println("UnintentionalStuck");
+        //System.out.println("UnintentionalStuck");
         // reoccur to the new node
         // way to break the recursion
         // this was my idea, it would only reoccur if would make a dif.
