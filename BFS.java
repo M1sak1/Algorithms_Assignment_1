@@ -1,8 +1,11 @@
+import java.time.Instant;
 import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.Object;
 public class BFS {
     public static void main(String[] Args){
+        long start = System.currentTimeMillis();
         String rawData = "";
         try{
             File opfil = new File("Maze.txt");
@@ -17,7 +20,8 @@ public class BFS {
         // getting the data back from the generator
         List<Cloneable> data = generateMatrix(rawData);
         bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2));
-
+        long end = System.currentTimeMillis();
+        System.out.println("This program took: " + (end - start) + "ms to complete");
     }
 
     static void bfs(int[][] maze, int[] start, int[] finish){
