@@ -1,21 +1,23 @@
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.util.Random;
 public class Main {
     //lmao I have totally forgotten how to use java
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner imp = new Scanner(System.in);
         System.out.println("input maze size row (Please only input a single int)");
         String mazeSizeRaw = imp.nextLine();
         int mazeSize = Integer.parseInt(mazeSizeRaw);
-        Scanner imp2 = new Scanner(System.in);
         System.out.println("input maze size column (Please only input a single int)");
-        int mazeSize2 = Integer.parseInt(imp2.nextLine());
-
+        int mazeSize2 = Integer.parseInt(imp.nextLine());
+        System.out.println("Please Enter a name for the file");
+        String OutName = imp.nextLine();
 
         Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
         maze = MazePath(maze);
         // System.out.println(maze);
-        PrintMaze(maze);
+        PrintMaze(maze, OutName);
     }
 //    public static void main(String[] args) {
 //        Cell[][] maze = makeMaze(5,3); //I think the row and column can be different
@@ -40,10 +42,12 @@ public class Main {
 
     //print the list to a file. but as yet does nothing
     // file format -> n,m:start:finish:maze
-    public static void PrintMaze(Cell[][] maze){
-        String totalpath = "";
-        totalpath = Print(maze);
+    public static void PrintMaze(Cell[][] maze, String outputName) throws IOException {
+        String totalpath = Print(maze);
         System.out.println(totalpath);
+        PrintWriter writer = new PrintWriter(outputName, StandardCharsets.UTF_8);
+        writer.println(totalpath);
+        writer.close();
         //print to a file
     }
 
