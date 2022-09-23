@@ -3,6 +3,7 @@ import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 public class DFS {
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         String Maze = "";
         try {
             File MazeFile = new File("Maze.txt");
@@ -19,8 +20,10 @@ public class DFS {
         MazeInformation(DFSHolder, Maze);
 
         DFS(DFSHolder);
+        long end = System.currentTimeMillis();
         System.out.println(DFSHolder.getPath());
         System.out.println(DFSHolder.getSteps());
+        System.out.println("This program took: " + (end - start) + "ms to complete");
     }
 
     public static DFSObject MazeInformation(DFSObject DFSHolder, String MazeFile){
