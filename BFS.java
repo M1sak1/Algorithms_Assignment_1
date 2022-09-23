@@ -107,7 +107,7 @@ public class BFS {
             case 0:
                 if (Col + 1 < maze[0].length) {
                     if (maze[Row][Col] != 0 && maze[Row][Col] != 2) {
-                        if(!visList[Row][Col]){
+                        if(!visList[Row][Col + 1]){
                             return true;
                         }
                     }
@@ -117,7 +117,7 @@ public class BFS {
             case 1:
                 if (Row + 1 < maze.length){
                     if (maze[Row][Col] != 0 && maze[Row][Col] != 1) {
-                        if(!visList[Row][Col]){
+                        if(!visList[Row + 1][Col]){
                             return true;
                         }
                     }
@@ -128,7 +128,7 @@ public class BFS {
                 // check if the move is possible
                 if(Col - 1 > 0){
                     if (maze[Row][Col - 1] == 1 || maze[Row][Col - 1] == 3){
-                        if(!visList[Row][Col]){
+                        if(!visList[Row][Col - 1]){
                             return true;
                         }
                     }
@@ -139,7 +139,7 @@ public class BFS {
                 //checking if the move is possible
                 if(Row - 1 > 0){
                     if(maze[Row - 1][Col] == 2 || maze[Row - 1][Col] == 3){
-                        if(!visList[Row][Col]){
+                        if(!visList[Row - 1][Col]){
                             return true;
                         }
                     }
