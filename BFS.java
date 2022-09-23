@@ -5,10 +5,13 @@ import java.io.FileNotFoundException;
 import java.lang.Object;
 public class BFS {
     public static void main(String[] Args){
+        Scanner imp = new Scanner(System.in);
+        System.out.println("Please input the name of the file containing the maze (including the file extention.)");
+        String Fname = imp.nextLine();
         long start = System.currentTimeMillis();
         String rawData = "";
         try{
-            File opfil = new File("Maze.txt");
+            File opfil = new File(Fname);
             Scanner reader = new Scanner(opfil);
             while(reader.hasNextLine()){
                 rawData = reader.nextLine();
