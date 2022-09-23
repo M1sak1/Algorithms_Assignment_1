@@ -28,7 +28,7 @@ public class BFS {
         boolean found = false;
         while(!found){
             if(start[0] == finish[0] && start[1] == finish[1]){
-                System.out.println("gotya");
+                System.out.println("\ngotya");
                 found = true;
             }
             //this just loops through the directions. enqueueing all possible ones.
@@ -56,8 +56,8 @@ public class BFS {
                     bfs.add(imp);
                 }
             }
-            System.out.print(Arrays.toString(start) + " ");
-
+            //System.out.print(Arrays.toString(start) + " ");
+            System.out.print(start[0] * maze[0].length + start[1] + " ");
             if(bfs.isEmpty()){ break; } // breaking if the Q is empty
 
             visList[start[0]][start[1]] = true; // this is to avoid repatation.

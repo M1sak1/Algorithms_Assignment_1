@@ -42,13 +42,13 @@ public class Main {
     // file format -> n,m:start:finish:maze
     public static void PrintMaze(Cell[][] maze){
         String totalpath = "";
-        totalpath = findIndx(maze);
+        totalpath = Print(maze);
         System.out.println(totalpath);
         //print to a file
     }
 
     //used to find the start and the finish node.
-    public static String findIndx(Cell[][] maze){
+    public static String Print(Cell[][] maze){
         String val = "";
         String start = "";
         String finish = "";
