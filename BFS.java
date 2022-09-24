@@ -8,6 +8,7 @@ public class BFS {
         //Scanner imp = new Scanner(System.in);
         //System.out.println("Please input the name of the file containing the maze (including the file extention.)");
         String Fname = Args[0]; //imp.nextLine();
+        System.out.println(Args[0]);
         long start = System.currentTimeMillis();
         String rawData = "";
         try{
@@ -24,7 +25,7 @@ public class BFS {
         List<Cloneable> data = generateMatrix(rawData);
         bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2));
         long end = System.currentTimeMillis();
-        System.out.println("This program took: " + (end - start) + "ms to complete");
+        System.out.println("\nThis program took: " + (end - start) + "ms to complete");
     }
 
     static void bfs(int[][] maze, int[] start, int[] finish){
@@ -35,7 +36,7 @@ public class BFS {
         boolean found = false;
         while(!found){
             if(start[0] == finish[0] && start[1] == finish[1]){
-                System.out.println("\ngotya");
+                // System.out.println("\ngotya");
                 found = true;
             }
             //this just loops through the directions. enqueueing all possible ones.
@@ -91,12 +92,13 @@ public class BFS {
                 int coordval = i * maze[0].length + j;
                 maze[i][j] = Integer.parseInt(MazeInf[coordval]);
                 //System.out.println(coordval + " " + data[1]);
-                if(coordval == Integer.parseInt(data[1]) - 1){
+                if(coordval == Integer.parseInt(data[1])){
+                    System.out.println(coordval);
                     //System.out.println("boop");
                     startCoords[0] = i;
                     startCoords[1] = j;
                 }
-                if(coordval == Integer.parseInt(data[2]) - 1){
+                if(coordval == Integer.parseInt(data[2])){
                     endCoords[0] = i;
                     endCoords[1] = j;
                 }

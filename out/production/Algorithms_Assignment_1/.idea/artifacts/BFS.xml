@@ -2,6 +2,9 @@
   <artifact type="jar" name="BFS">
     <output-path>$PROJECT_DIR$/out/artifacts/BFS</output-path>
     <root id="archive" name="BFS.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-BFS/META-INF/MANIFEST.MF" />
+      </element>
       <element id="module-output" name="Algorithms_Assignment_1" />
     </root>
   </artifact>

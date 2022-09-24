@@ -9,6 +9,29 @@ public class Main {
         int mazeSize = Integer.parseInt(args[0]);
         int mazeSize2 = Integer.parseInt(args[1]);
         String OutName = args[2];
+//        int i, j;
+//        for(i = 0; i < 3; i++){
+//            int x = 0, y = 0;
+//            switch(i){
+//                case 0:
+//                    x = 20;
+//                    y = 20;
+//                    break;
+//                case 1:
+//                    x = 20;
+//                    y = 50;
+//                    break;
+//                case 2:
+//                    x = 100;
+//                    y = 100;
+//            }
+//            for(j = 0; j < 5; j++){
+//                Cell[][] maze = makeMaze(x,y); //I think the row and column can be different
+//                maze = MazePath(maze);
+//                // System.out.println(maze);
+//                PrintMaze(maze, "Maze" + y + "_"+j);
+//            }
+//        }
 
         Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
         maze = MazePath(maze);
@@ -52,19 +75,22 @@ public class Main {
         String val = "";
         String start = "";
         String finish = "";
+        int tempval;
         int i, j;
         for(i = 0; i < maze.length; i++){
             for(j = 0; j < maze[0].length; j++){
                     if(maze[i][j].getStart()) {
                         //since dfs works from 1 not zero
                         //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
-                        start = "" + (i * maze[0].length + j) + 1;  //Why +1? for sanity of course! not really i was happy to have it index from 0 but according to the specs it starts at 1. sadly....
+                        tempval = (i * maze[0].length + j ) + 1;
+                        start = "" + tempval ;  //Why +1? for sanity of course! not really i was happy to have it index from 0 but according to the specs it starts at 1. sadly....
                         //start = "" + (i) * (j);
                         System.out.println(i + " "+j);
                     }
                     if(maze[i][j].getFinish()) {
                         System.out.println(i + " "+j);
-                        finish = ""+ (i * maze[0].length + j) + 1; //As above so below
+                        tempval = (i * maze[0].length + j ) + 1;
+                        finish = ""+ tempval; //As above so below
                     }
                     val += maze[i][j].getDir();
                 }
