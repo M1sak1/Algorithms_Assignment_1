@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.lang.Object;
 public class BFS {
     public static void main(String[] Args){
-        Scanner imp = new Scanner(System.in);
-        System.out.println("Please input the name of the file containing the maze (including the file extention.)");
-        String Fname = imp.nextLine();
+        //Scanner imp = new Scanner(System.in);
+        //System.out.println("Please input the name of the file containing the maze (including the file extention.)");
+        String Fname = Args[0]; //imp.nextLine();
         long start = System.currentTimeMillis();
         String rawData = "";
         try{
@@ -91,12 +91,12 @@ public class BFS {
                 int coordval = i * maze[0].length + j;
                 maze[i][j] = Integer.parseInt(MazeInf[coordval]);
                 //System.out.println(coordval + " " + data[1]);
-                if(coordval == Integer.parseInt(data[1])){
+                if(coordval == Integer.parseInt(data[1]) - 1){
                     //System.out.println("boop");
                     startCoords[0] = i;
                     startCoords[1] = j;
                 }
-                if(coordval == Integer.parseInt(data[2])){
+                if(coordval == Integer.parseInt(data[2]) - 1){
                     endCoords[0] = i;
                     endCoords[1] = j;
                 }

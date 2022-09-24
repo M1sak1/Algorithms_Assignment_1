@@ -5,9 +5,10 @@ import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 public class DFS {
     public static void main(String[] args) {
-        Scanner imp = new Scanner(System.in);
-        System.out.println("Please input the name of the file containing the maze (including the file extention.)");
-        String Fname = imp.nextLine();
+        //Scanner imp = new Scanner(System.in);
+        //System.out.println("Please input the name of the file containing the maze (including the file extention.)");
+        String Fname = args[0]; //imp.nextLine();
+
         long start = System.currentTimeMillis();
         String Maze = "";
         try {

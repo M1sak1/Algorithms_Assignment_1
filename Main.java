@@ -1,18 +1,14 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+//import java.util.Scanner;
 import java.util.Random;
 public class Main {
     //lmao I have totally forgotten how to use java
     public static void main(String[] args) throws IOException {
-        Scanner imp = new Scanner(System.in);
-        System.out.println("input maze size row (Please only input a single int)");
-        String mazeSizeRaw = imp.nextLine();
-        int mazeSize = Integer.parseInt(mazeSizeRaw);
-        System.out.println("input maze size column (Please only input a single int)");
-        int mazeSize2 = Integer.parseInt(imp.nextLine());
-        System.out.println("Please Enter a name for the file");
-        String OutName = imp.nextLine();
+
+        int mazeSize = Integer.parseInt(args[0]);
+        int mazeSize2 = Integer.parseInt(args[1]);
+        String OutName = args[2];
 
         Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
         maze = MazePath(maze);
@@ -62,13 +58,13 @@ public class Main {
                     if(maze[i][j].getStart()) {
                         //since dfs works from 1 not zero
                         //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
-                        start = "" + (i * maze[0].length + j);
+                        start = "" + (i * maze[0].length + j) + 1;  //Why +1? for sanity of course! not really i was happy to have it index from 0 but according to the specs it starts at 1. sadly....
                         //start = "" + (i) * (j);
                         System.out.println(i + " "+j);
                     }
                     if(maze[i][j].getFinish()) {
                         System.out.println(i + " "+j);
-                        finish = ""+ (i * maze[0].length + j);
+                        finish = ""+ (i * maze[0].length + j) + 1; //As above so below
                     }
                     val += maze[i][j].getDir();
                 }
