@@ -7,6 +7,7 @@ public class DFSObject {
     int endPosition = -1;
     int numRows = 0;
     int numColumns = 0;
+    int stepsForPath = 0;
 
     boolean PathSolved = false;
 
@@ -81,5 +82,13 @@ public class DFSObject {
 
     public void setPathSolved(boolean pathSolved) {
         PathSolved = pathSolved;
+    }
+
+    public int getStepsForPath() {
+        return stepsForPath;
+    }
+
+    public void setStepsForPath(int stepsForPath) {
+        this.stepsForPath = stepsForPath;
     }
 }

@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner; // Import the Scanner class to read text files
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
@@ -21,12 +23,15 @@ public class DFS {
         }
         DFSObject DFSHolder = new DFSObject();
         MazeInformation(DFSHolder, Maze);
+        //you may notice its not using the first one, that is because doing it through openness was a huge mistake
+        DFS2(DFSHolder);
 
-        DFS(DFSHolder);
         long end = System.currentTimeMillis();
-        System.out.println(DFSHolder.getPath());
-        System.out.println(DFSHolder.getSteps());
+        System.out.println("This maze's path " + DFSHolder.getPath());
+        System.out.println("The steps taken " + (DFSHolder.getStepsForPath() - 1));//it shouldn't count the first node as that's where we begin not a step
+        System.out.println("The total steps taken to find the path " + DFSHolder.getSteps());
         System.out.println("This program took: " + (end - start) + "ms to complete");
+        //A small scale solution of small problems is all that's needed now
     }
 
     public static DFSObject MazeInformation(DFSObject DFSHolder, String MazeFile){
@@ -268,5 +273,111 @@ public class DFS {
             DFSHolder.setPath(currentLoc + DFSHolder.getPath());
         }
         return DFSHolder;
+    }
+
+    static DFSObject DFS2(DFSObject DFSHolder) {
+        //System.out.println(Arrays.deepToString(maze) + "\n" + Arrays.toString(start) + "\n" + Arrays.toString(finish));
+        int i;
+        int currentPrelocation = DFSHolder.getPreLocation();
+        int currentLoc = DFSHolder.getLocation();
+        char walls = DFSHolder.getMaze().charAt(DFSHolder.getLocation() - 1); // char list is from 0 and location goes from 1 and getmaze is a string of the walls
+        if (DFSHolder.getLocation() == DFSHolder.getEndPosition()) {
+            System.out.println("We got here from finishing it");
+            DFSHolder.setPathSolved(true);
+            DFSHolder.setPath(DFSHolder.getPath()  + DFSHolder.getLocation());
+            DFSHolder.setStepsForPath(DFSHolder.getStepsForPath() + 1);
+            return DFSHolder;
+        }
+        //this just loops through the directions. going into all possible ones.
+        for (i = 0; i < 4; i++) {
+            if (isPossible(DFSHolder, i)) {
+                switch (i) {
+                    case 0 -> { //right
+                        DFSHolder.setPreLocation(currentLoc);
+                        DFSHolder.setLocation(currentLoc + 1);
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS2(DFSHolder);
+                        if (DFSHolder.isPathSolved()) {
+                            i = 10; //break the loop
+                        }
+                        break;
+                    }
+                    case 1 -> { //down
+                        DFSHolder.setPreLocation(currentLoc);
+                        DFSHolder.setLocation(currentLoc + DFSHolder.getNumColumns());
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS2(DFSHolder);
+                        if (DFSHolder.isPathSolved()) {
+                            i = 10; //break the loop
+                        }
+                    }
+                    case 2 -> { //left
+                        DFSHolder.setPreLocation(currentLoc);
+                        DFSHolder.setLocation(currentLoc - 1);
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS2(DFSHolder);
+                        if (DFSHolder.isPathSolved()) {
+                            i = 10; //break the loop
+                        }
+                    }
+                    case 3 -> { //up
+                        DFSHolder.setPreLocation(currentLoc);
+                        DFSHolder.setLocation(currentLoc - DFSHolder.getNumColumns());
+                        DFSHolder.setSteps(DFSHolder.getSteps() + 1);
+                        DFS2(DFSHolder);
+                        if (DFSHolder.isPathSolved()) {
+                            i = 10; //break the loop
+                        }
+                    }
+                }
+                DFSHolder.setPreLocation(currentPrelocation);
+                DFSHolder.setLocation(currentLoc);
+            }
+        }
+        if (DFSHolder.isPathSolved()){
+            DFSHolder.setPath(currentLoc +","+ DFSHolder.getPath());
+            DFSHolder.setStepsForPath(DFSHolder.getStepsForPath() + 1);
+        }
+        return DFSHolder;
+    }
+    static boolean isPossible(DFSObject DFSHolder, int dir){
+        switch(dir) {
+            //Right
+            case 0:
+                if (DFSHolder.getPreLocation() != DFSHolder.getLocation() + 1 && DFSHolder.getLocation() % DFSHolder.getNumColumns() != 0 ) {
+                    if (Character.getNumericValue(DFSHolder.getMaze().charAt(DFSHolder.getLocation() - 1)) % 2 != 0) {
+                        return true;
+                    }
+                }
+                break;
+            //Down
+            case 1:
+                if (DFSHolder.getPreLocation() != DFSHolder.getLocation() + DFSHolder.getNumColumns() && DFSHolder.getLocation() + DFSHolder.getNumColumns() <= (DFSHolder.getNumColumns() * DFSHolder.getNumRows())){
+                    if (Character.getNumericValue(DFSHolder.getMaze().charAt((DFSHolder.getLocation() - 1)))  > 1) {
+                        return true;
+                    }
+                }
+                break;
+            //Left
+            case 2:
+                // check if the move is possible
+                if((DFSHolder.getLocation() - 1) % DFSHolder.getNumColumns() != 0 && DFSHolder.getLocation() - 1 != DFSHolder.getPreLocation()){
+                    if (Character.getNumericValue(DFSHolder.getMaze().charAt(DFSHolder.getLocation() - 2)) % 2 != 0) {
+                        return true;
+                    }
+                }
+                break;
+            //Up
+            case 3:
+                //checking if the move is possible
+                if(DFSHolder.getLocation() - DFSHolder.getNumColumns() > 0 && DFSHolder.getLocation() - DFSHolder.getNumColumns() != DFSHolder.getPreLocation()){
+                    if (Character.getNumericValue(DFSHolder.getMaze().charAt((DFSHolder.getLocation() - DFSHolder.getNumColumns()) - 1)) > 1){
+                        return true;
+                    }
+                }
+                break;
+        }
+        // returns false by default
+        return false;
     }
 }
