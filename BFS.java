@@ -24,7 +24,7 @@ public class BFS {
         // getting the data back from the generator
         List<Cloneable> data = generateMatrix(rawData);
         int[] export = bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2), steps);
-        System.out.println("Maze path is: " + (export.length - 1 )+ " steps long");
+        System.out.println("Maze path is: " + (export.length - 2 )+ " steps long"); // go to remove the start and finish nodes
         long end = System.currentTimeMillis();
         System.out.println("This program took: " + (end - start) + "ms to complete");
         System.out.println("Maze solution: " + Arrays.toString(export));
@@ -83,8 +83,8 @@ public class BFS {
             start = bfs.remove();
             steps[0] ++;
         }
-        System.out.println(PossiblePaths);
-        System.out.println("This program took " + steps[0] + " steps total");
+        //System.out.println(PossiblePaths);
+        System.out.println("This program took " + (steps[0] - 1 )+ " steps total");
         return result;
     }
 
@@ -103,7 +103,7 @@ public class BFS {
                     if(Arrays.equals(finish, currentIndx)){  // print it if it is complete
                         int j = 0;
                         int[] export = new int[paths.get(i).size()];
-                        for(j = 0; paths.get(i).size() > j; j++){
+                        for(j = 0; paths.get(i).size() - 1 > j; j++){
                             export[j] = paths.get(i).get(j) + 1;
                         }
                         return export;
@@ -127,7 +127,7 @@ public class BFS {
                             if(Arrays.equals(finish, currentIndx)){  // print it if it is complete
                                 int j = 0;
                                 int[] export = new int[paths.get(i).size()];
-                                for(j = 0; paths.get(i).size() > j; j++){
+                                for(j = 0; paths.get(i).size() - 1 > j; j++){
                                     export[j] = paths.get(i).get(j) + 1;
                                 }
                                 return export;
