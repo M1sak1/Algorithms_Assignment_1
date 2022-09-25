@@ -59,7 +59,6 @@ public class Main {
                     }
                 //a single cell has this attribute set to true
                     if(maze[i][j].getFinish()) {
-                        System.out.println("Finishing cell" + i + " "+j);
                         //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
                         tempval = (i * maze[0].length + j ) + 1;
                         finish = ""+ tempval; //saving to finish
