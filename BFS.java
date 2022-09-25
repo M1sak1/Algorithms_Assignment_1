@@ -43,7 +43,8 @@ public class BFS {
         boolean found = false;
         while(!found){
             if(start[0] == finish[0] && start[1] == finish[1]){
-                // System.out.println("\ngotya");
+                //System.out.println("gotya");
+                //System.out.println(Arrays.deepToString(visList));
                 found = true;
             }
             //this just loops through the directions. enqueueing all possible ones.
@@ -68,11 +69,11 @@ public class BFS {
                             imp[1] = start[1];
                         }
                     }
+                    result = createPath((imp[0] * maze[0].length  + imp[1]), PossiblePaths, start, maze, finish);
                     //System.out.println(imp[0] * maze[0].length + imp[1]);
                     bfs.add(imp);
                 }
             }
-            result = createPath((start[0] * maze[0].length  + start[1]), PossiblePaths, start, maze, finish);
             //System.out.print(Arrays.toString(start) + " ");
             //System.out.print(start[0] * maze[0].length + start[1] + " ");
             if(bfs.isEmpty()){ break; } // breaking if the Q is empty
@@ -95,7 +96,7 @@ public class BFS {
         LinkedList<Integer> temp;
         for(i =0; i < paths.size(); i++){       // looping through the linked list
             //temp = paths.get(i);
-            if(! paths.get(i).contains(newmove)){        // checking if the node is already in the path
+            if(!paths.get(i).contains(newmove)){        // checking if the node is already in the path
                 if(checkAdjacency(newmove, paths.get(i).getLast(), currentIndx, maze)){
                     //temp.add(newmove);
                     paths.get(i).add(newmove);
@@ -160,16 +161,32 @@ public class BFS {
 
         if(newNode == tailNode - 1){                // Left
             // check if the move is possible
-            return true;
+            if(Col - 1 >= 0){
+                if (maze[Row][Col - 1] == 1 || maze[Row][Col - 1] == 3){
+                    return true;
+                }
+            }
         }
         if(newNode == tailNode + 1){                // Right
-            return true;
+            if (Col + 1 < maze[0].length) {
+                if (maze[Row][Col] != 0 && maze[Row][Col] != 2) {
+                    return true;
+                }
+            }
         }
         if(newNode == (tailNode + maze[0].length)){    // Down
-            return true;
+            if (Row + 1 < maze.length){
+                if (maze[Row][Col] != 0 && maze[Row][Col] != 1) {
+                    return true;
+                }
+            }
         }
         if(newNode == (tailNode - maze[0].length)){    // up
-            return true;
+            if(Row - 1 >= 0){
+                if(maze[Row - 1][Col] == 2 || maze[Row - 1][Col] == 3){
+                    return true;
+                }
+            }
         }
         return false;
     }
