@@ -1,15 +1,14 @@
-import java.time.Instant;
 import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.Object;
+
 public class BFS {
     public static void main(String[] Args){
         //Scanner imp = new Scanner(System.in);
         //System.out.println("Please input the name of the file containing the maze (including the file extention.)");
         String Fname = Args[0]; //imp.nextLine();
         int[] steps = new int[2];
-        System.out.println(Args[0]);
+        //System.out.println(Args[0]);
         long start = System.currentTimeMillis();
         String rawData = "";
         try{
@@ -24,17 +23,21 @@ public class BFS {
         }
         // getting the data back from the generator
         List<Cloneable> data = generateMatrix(rawData);
-        bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2), steps);
+        int[] export = bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2), steps);
+        System.out.println("Maze path is: " + export.length + " steps long");
         long end = System.currentTimeMillis();
-        System.out.println("\nThis program took: " + (end - start) + "ms to complete");
+        System.out.println("This program took: " + (end - start) + "ms to complete");
+        System.out.println("Maze solution: " + Arrays.toString(export));
+        PrinttextMaze((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2), export);
     }
 
-    static void bfs(int[][] maze, int[] start, int[] finish, int[] steps){
+    static int[] bfs(int[][] maze, int[] start, int[] finish, int[] steps){
         //System.out.println(Arrays.deepToString(maze) + "\n" + Arrays.toString(start) + "\n" + Arrays.toString(finish));
         Queue<int[]> bfs = new LinkedList<>();
         boolean[][] visList = new boolean[maze.length][maze[0].length];
-
+        int[] result = new int[0];
         LinkedList<LinkedList<Integer> > PossiblePaths = new LinkedList<>();
+        createPath(start[0] * maze[0].length + start[1], PossiblePaths, start, maze, finish);
 
         int i;
         boolean found = false;
@@ -65,12 +68,13 @@ public class BFS {
                             imp[1] = start[1];
                         }
                     }
-                    createPath(start[0] * maze[0].length + start[1], PossiblePaths, start, maze, finish);
+                    //System.out.println(imp[0] * maze[0].length + imp[1]);
                     bfs.add(imp);
                 }
             }
+            result = createPath((start[0] * maze[0].length  + start[1]), PossiblePaths, start, maze, finish);
             //System.out.print(Arrays.toString(start) + " ");
-            System.out.print(start[0] * maze[0].length + start[1] + " ");
+            //System.out.print(start[0] * maze[0].length + start[1] + " ");
             if(bfs.isEmpty()){ break; } // breaking if the Q is empty
 
             visList[start[0]][start[1]] = true; // this is to avoid repatation.
@@ -78,9 +82,12 @@ public class BFS {
             start = bfs.remove();
             steps[0] ++;
         }
+        //System.out.println(PossiblePaths);
+        System.out.println("This program took " + steps[0] + " total");
+        return result;
     }
 
-    static LinkedList<LinkedList<Integer>> createPath(int newmove, LinkedList<LinkedList<Integer>> paths, int[] currentIndx, int[][] maze, int[] finish){
+    static int[] createPath(int newmove, LinkedList<LinkedList<Integer>> paths, int[] currentIndx, int[][] maze, int[] finish){
         // loop through the paths in the linked list.
         // - See if the node can be added to the end of any of them
         // - return the first
@@ -92,33 +99,53 @@ public class BFS {
                 if(checkAdjacency(newmove, paths.get(i).getLast(), currentIndx, maze)){
                     //temp.add(newmove);
                     paths.get(i).add(newmove);
-                    if(currentIndx == finish){  // print it if it is complete
-                        System.out.println(paths.get(i));
+                    if(Arrays.equals(finish, currentIndx)){  // print it if it is complete
+                        int j = 0;
+                        int[] export = new int[paths.get(i).size()];
+                        for(j = 0; paths.get(i).size() > j; j++){
+                            export[j] = paths.get(i).get(j) + 1;
+                        }
+                        return export;
+                        //System.out.println( "The primary path is: " + Arrays.toString(export));
                     }
                     break;                      // break the loop when it is added
                 }
                 else{
                     // checking if this is a splinter path. is so create a new path.
-                    if( paths.get(i).size() > 1 && checkAdjacency(newmove, paths.get(i).get(i-1), currentIndx, maze)){
-                        // removing the last index and adding the new move.
-                        temp = (LinkedList<Integer>) paths.get(i).clone();
-                        temp.removeLast();
-                        temp.add(newmove);
-                        // adding the new path to the amalgam of paths
-                        paths.add(temp);
-                        //System.out.println(paths.get(i));
-                        //System.out.println(temp);
-                        if(currentIndx == finish){  // print it if it is complete
-                            System.out.println(paths.get(i));
+                    if( paths.get(i).size() >= 1){
+                        if(checkAdjacency(newmove, paths.get(i).get(paths.get(i).size()-2), currentIndx, maze)) {
+                            // removing the last index and adding the new move.
+                            temp = (LinkedList<Integer>) paths.get(i).clone();
+                            temp.removeLast();
+                            temp.add(newmove);
+                            // adding the new path to the amalgam of paths
+                            paths.add(temp);
+                            //System.out.println(paths.get(i));
+                            //System.out.println(temp);
+
+                            if(Arrays.equals(finish, currentIndx)){  // print it if it is complete
+                                int j = 0;
+                                int[] export = new int[paths.get(i).size()];
+                                for(j = 0; paths.get(i).size() > j; j++){
+                                    export[j] = paths.get(i).get(j) + 1;
+                                }
+                                return export;
+                                //System.out.println( "The primary path is: " + Arrays.toString(export));
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
-
         }
-
-        return paths;
+        // if there is nothing in the current linked list create a new one.
+        if(paths.size() == 0){
+            temp = new LinkedList<Integer>();
+            temp.add(newmove);
+            paths.add(temp);
+        }
+        // if it gets to this there was a massive problem
+        return new int[0];
     }
 
     static boolean checkAdjacency(int newNode, int tailNode, int[] indx, int[][] maze){
@@ -132,32 +159,16 @@ public class BFS {
         int Row = indx[0];
 
         if(newNode == tailNode - 1){                // Left
-            if(Col - 1 >= 0){
-                if (maze[Row][Col - 1] == 1 || maze[Row][Col - 1] == 3){
-                    return true;
-                }
-            }
+            return true;
         }
         if(newNode == tailNode + 1){                // Right
-            if (Col + 1 < maze[0].length) {
-                if (maze[Row][Col] != 0 && maze[Row][Col] != 2) {
-                    return true;
-                }
-            }
+            return true;
         }
         if(newNode == (tailNode + maze.length)){    // Down
-            if (Row + 1 < maze.length){
-                if (maze[Row][Col] != 0 && maze[Row][Col] != 1) {
-                    return true;
-                }
-            }
+            return true;
         }
         if(newNode == (tailNode - maze.length)){    // up
-            if(Row - 1 >= 0){
-                if(maze[Row - 1][Col] == 2 || maze[Row - 1][Col] == 3){
-                    return true;
-                }
-            }
+            return true;
         }
         return false;
     }
@@ -179,13 +190,13 @@ public class BFS {
                 int coordval = i * maze[0].length + j;
                 maze[i][j] = Integer.parseInt(MazeInf[coordval]);
                 //System.out.println(coordval + " " + data[1]);
-                if(coordval == Integer.parseInt(data[1])){
-                    System.out.println(coordval);
+                if(coordval == Integer.parseInt(data[1]) - 1){
+                    //System.out.println(coordval);
                     //System.out.println("boop");
                     startCoords[0] = i;
                     startCoords[1] = j;
                 }
-                if(coordval == Integer.parseInt(data[2])){
+                if(coordval == Integer.parseInt(data[2]) - 1){
                     endCoords[0] = i;
                     endCoords[1] = j;
                 }
@@ -244,5 +255,128 @@ public class BFS {
         }
         // returns false by default
         return false;
+    }
+    public static void PrinttextMaze(int [][] Maze, int[] S, int[] F, int[] Solution){
+        //constructing the walls
+        List<Integer> sol = Arrays.stream(Solution).boxed().toList();
+        String onLine = "-";
+        String betweenLine = "|";
+        boolean start = false;
+        boolean finish = false;
+        boolean populated = false;
+        String[] returnHolder;
+        for(int i = 0 ; i < Maze[1].length; i++){
+            onLine += "---";
+        }
+        System.out.println(onLine);
+        for(int i = 0; i < Maze.length; i++){
+            onLine = "|";
+            betweenLine = "|";
+            for(int j = 0; j < Maze[1].length; j++){
+                if( i == S[0] && j == S[1]) {
+                    start = true;
+                }
+                if( i == F[0] && j == F[1]) {
+                    finish = true;
+                }
+                if( sol.contains((i * Maze[1].length + j) + 1) && (!finish && !start)){ // seeing if it is populated
+                    //System.out.println("boop");
+                    populated = true;
+                }
+                returnHolder = PrintWalls(Maze[i][j], onLine, betweenLine, start, finish, populated);
+                onLine = returnHolder[0];
+                betweenLine = returnHolder[1];
+                start = false;
+                populated = false;
+                finish = false;
+            }
+            System.out.println(onLine);
+            if(i + 1 != Maze.length){
+                System.out.println(betweenLine);
+            }
+        }
+        onLine = "-";
+        for(int i = 0 ; i < Maze[1].length; i++){
+            onLine += "---";
+        }
+        System.out.println(onLine);
+    }
+
+    public static String[] PrintWalls(int direction, String onLine, String betweenLine, boolean start, boolean finish, boolean populated){
+        String[] Lines = new String[]{onLine,betweenLine};
+        //[0] is online
+        //[1] is betweenLines
+        switch(direction){
+            case 0:{
+                //will create one below and to the right
+                if(start){
+                    Lines[0] += "S |";
+                }
+                else if(finish){
+                    Lines[0] += "F |";
+                }
+                else if(populated){
+                    Lines[0] += "* |";
+                }
+                else{
+                    Lines[0] += "  |";
+                }
+                Lines[1] += "--";
+                break;
+            }
+            case 1:{
+                //will create one below
+                if(start){
+                    Lines[0] += "S  ";
+                }
+                else if(finish){
+                    Lines[0] += "F  ";
+                }
+                else if(populated){
+                    Lines[0] += "*  ";
+                }
+                else{
+                    Lines[0] += "   ";
+                }
+                Lines[1] += "--";
+                break;
+            }
+            case 2:{
+                if(start){
+                    Lines[0] += "S |";
+                }
+                else if(finish){
+                    Lines[0] += "F |";
+                }
+                else if(populated){
+                    Lines[0] += "* |";
+                }
+                else{
+                    Lines[0] += "  |";
+                }
+                Lines[1] += "  ";
+                //will create one to the right
+                break;
+            }
+            default:{
+                //case 3 has right and down open so it wont need to create walls
+
+                if(start){
+                    Lines[0] += "S  ";
+                }
+                else if(finish){
+                    Lines[0] += "F  ";
+                }
+                else if(populated){
+                    Lines[0] += "*  ";
+                }
+                else{
+                    Lines[0] += "   ";
+                }
+                Lines[1] += "  ";
+            }
+        }
+        Lines[1] += "|";
+        return Lines;
     }
 }
