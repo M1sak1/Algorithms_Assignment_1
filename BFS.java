@@ -8,6 +8,7 @@ public class BFS {
         //Scanner imp = new Scanner(System.in);
         //System.out.println("Please input the name of the file containing the maze (including the file extention.)");
         String Fname = Args[0]; //imp.nextLine();
+        int[] steps = new int[2];
         System.out.println(Args[0]);
         long start = System.currentTimeMillis();
         String rawData = "";
@@ -23,15 +24,18 @@ public class BFS {
         }
         // getting the data back from the generator
         List<Cloneable> data = generateMatrix(rawData);
-        bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2));
+        bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2), steps);
         long end = System.currentTimeMillis();
         System.out.println("\nThis program took: " + (end - start) + "ms to complete");
     }
 
-    static void bfs(int[][] maze, int[] start, int[] finish){
+    static void bfs(int[][] maze, int[] start, int[] finish, int[] steps){
         //System.out.println(Arrays.deepToString(maze) + "\n" + Arrays.toString(start) + "\n" + Arrays.toString(finish));
         Queue<int[]> bfs = new LinkedList<>();
         boolean[][] visList = new boolean[maze.length][maze[0].length];
+
+        LinkedList<LinkedList<Integer> > PossiblePaths = new LinkedList<>();
+
         int i;
         boolean found = false;
         while(!found){
@@ -61,6 +65,7 @@ public class BFS {
                             imp[1] = start[1];
                         }
                     }
+                    createPath(start[0] * maze[0].length + start[1], PossiblePaths, start, maze, finish);
                     bfs.add(imp);
                 }
             }
@@ -71,8 +76,90 @@ public class BFS {
             visList[start[0]][start[1]] = true; // this is to avoid repatation.
 
             start = bfs.remove();
+            steps[0] ++;
+        }
+    }
+
+    static LinkedList<LinkedList<Integer>> createPath(int newmove, LinkedList<LinkedList<Integer>> paths, int[] currentIndx, int[][] maze, int[] finish){
+        // loop through the paths in the linked list.
+        // - See if the node can be added to the end of any of them
+        // - return the first
+        int i;
+        LinkedList<Integer> temp;
+        for(i =0; i < paths.size(); i++){       // looping through the linked list
+            //temp = paths.get(i);
+            if(! paths.get(i).contains(newmove)){        // checking if the node is already in the path
+                if(checkAdjacency(newmove, paths.get(i).getLast(), currentIndx, maze)){
+                    //temp.add(newmove);
+                    paths.get(i).add(newmove);
+                    if(currentIndx == finish){  // print it if it is complete
+                        System.out.println(paths.get(i));
+                    }
+                    break;                      // break the loop when it is added
+                }
+                else{
+                    // checking if this is a splinter path. is so create a new path.
+                    if( paths.get(i).size() > 1 && checkAdjacency(newmove, paths.get(i).get(i-1), currentIndx, maze)){
+                        // removing the last index and adding the new move.
+                        temp = (LinkedList<Integer>) paths.get(i).clone();
+                        temp.removeLast();
+                        temp.add(newmove);
+                        // adding the new path to the amalgam of paths
+                        paths.add(temp);
+                        //System.out.println(paths.get(i));
+                        //System.out.println(temp);
+                        if(currentIndx == finish){  // print it if it is complete
+                            System.out.println(paths.get(i));
+                        }
+                        break;
+                    }
+                }
+            }
 
         }
+
+        return paths;
+    }
+
+    static boolean checkAdjacency(int newNode, int tailNode, int[] indx, int[][] maze){
+        // indx [row, col]
+        //if(newNode - 1 == )
+        // Checking if they are adjacent in actuality
+        // Checking if it can move
+        // right, check left, check up, check down. , checking if it is adjacent
+        // once we check if we really are adjacent we check if it is a legal move
+        int Col = indx[1];
+        int Row = indx[0];
+
+        if(newNode == tailNode - 1){                // Left
+            if(Col - 1 >= 0){
+                if (maze[Row][Col - 1] == 1 || maze[Row][Col - 1] == 3){
+                    return true;
+                }
+            }
+        }
+        if(newNode == tailNode + 1){                // Right
+            if (Col + 1 < maze[0].length) {
+                if (maze[Row][Col] != 0 && maze[Row][Col] != 2) {
+                    return true;
+                }
+            }
+        }
+        if(newNode == (tailNode + maze.length)){    // Down
+            if (Row + 1 < maze.length){
+                if (maze[Row][Col] != 0 && maze[Row][Col] != 1) {
+                    return true;
+                }
+            }
+        }
+        if(newNode == (tailNode - maze.length)){    // up
+            if(Row - 1 >= 0){
+                if(maze[Row - 1][Col] == 2 || maze[Row - 1][Col] == 3){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     static List<Cloneable> generateMatrix(String inp){
