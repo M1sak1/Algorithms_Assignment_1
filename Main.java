@@ -99,8 +99,7 @@ public class Main {
         }
         // == What you see above you is so dumb but it works == //
 
-        // Generating the paths
-
+        // Generating the openness
         maze = mazeRec(maze, coordinate1, coordinate2);
         return maze;
     }
@@ -267,36 +266,33 @@ public class Main {
     // row -> the current row pos; column -> the current column pos | prex -> the row coord of the previous node prey -> the column coord of the previous node.
     public static Cell[][] mazeRec(Cell[][] maze, int row, int column) {
         Random rand = new Random();
-        int dir;
-        boolean moved = false;
-        int stuckInitially = 0; //to determine what the finish is
+        int dir; //what direction to travel
+        boolean moved = false; //to ensure the program is continuing to look for new paths when necessary
+        int stuckInitially = 0; //to determine if the maze can generate a path from the current location
         while(!stuck(maze, row, column, 0) || !stuck(maze, row, column, 1)) {
             stuckInitially = 1; // not initially stuck and won't qualify for being the finish
             dir = rand.nextInt(4);
-            //System.out.println("pos: " + row + "," + column + " move: " + dir);
             switch (dir) {
                 //up
                 case 0:
-                    //checking if the move is possible
+                    //checking if the move is possible(out of bounds of the maze or the nodes been visited)
                     if ((row - 1) >= 0 && !maze[row - 1][column].isVisited()) {
-                        //System.out.println("moved");
                         //Checking if it is an allowed move.
-                        maze[row][column].setVisited(true);
-                        maze[row][column].setUp(true);
-                        maze[row][column].genDir();
-                        row--;
+                        maze[row][column].setVisited(true); //sets current node as visited
+                        maze[row][column].setUp(true); //sets this nodes direction to up
+                        maze[row][column].genDir(); //takes all the true direction values (left,right,up,down) then generates the appropriate openness
+                        row--; //goes to the node below and sets the appropriate directional values and generates an openness (openness will and does change after every new interaction with that node)
                         maze[row][column].setDown(true);
                         maze[row][column].genDir();
-                        maze = mazeRec(maze, row, column);
-                        row++;
+                        maze = mazeRec(maze, row, column);// recurse with the new values
+                        row++; //if the program hits a dead end this current instance of this function will hold its actual location again
                     }
                     break;
                 //down
                 case 1:
-                    //checking if the move is possible
+                    //checking if the move is possible(out of bounds of the maze or the nodes been visited)
                     if ((row + 1) < maze.length && !maze[row + 1][column].isVisited()) {
-                        //System.out.println("moved");
-                        //Checking if it is an allowed move.
+                        //does same as case 0 but we're going up this time
                         maze[row][column].setVisited(true);
                         maze[row][column].setDown(true);
                         maze[row][column].genDir();
@@ -309,10 +305,10 @@ public class Main {
                     break;
                 //left
                 case 2:
-                    //checking if the move is possible
+                    //checking if the move is possible(out of bounds of the maze or the nodes been visited)
                     if ((column - 1) >= 0 && !maze[row][column - 1].isVisited()) {
                         //System.out.println("moved");
-                        //Checking if it is an allowed move.
+                        //does same as case 0 but we're going left this time
                         maze[row][column].setVisited(true);
                         maze[row][column].setLeft(true);
                         maze[row][column].genDir();
@@ -325,9 +321,9 @@ public class Main {
                     break;
                 //right
                 case 3:
-                    //checking if the move is possible
+                    //checking if the move is possible(out of bounds of the maze or the nodes been visited)
                     if ((column + 1) < maze[0].length && !maze[row][column + 1].isVisited()) {
-                        //System.out.println("moved");
+                        //does same as case 0 but we're going right this time
                         maze[row][column].setVisited(true);
                         maze[row][column].setRight(true);
                         maze[row][column].genDir();
@@ -340,11 +336,8 @@ public class Main {
                     break;
             }
         }
-        //if(stuckInitially == 0){
-        //    maze[row][column].setFinish(true);
-       // }
-        maze[row][column].setVisited(true); // should make a node that is trapped be found as visited then never tried to be entered again
-        //System.out.println("UnintentionalStuck");
+
+        maze[row][column].setVisited(true); // makes a node that is trapped be found as visited then never tried to be entered again
         // reoccur to the new node
         // way to break the recursion
         // this was my idea, it would only reoccur if would make a dif.
@@ -353,8 +346,11 @@ public class Main {
 
     // if it is not stuck it will return false.
     // if it is stuck it will return true.
+    //stuck is if no new paths can be made from the node
+    //ver is to test either left,right or up,down
     public static boolean stuck(Cell[][] maze, int row, int col, int ver){
         if(ver == 0){
+            //a cell is assigned a direction of -1 when first initialised, so we can determine if that cell already part of a path and would create a loop if connected to
             if((row + 1) < maze.length && maze[row + 1][col].getDir() == -1){
                 return false;
             }
@@ -370,51 +366,63 @@ public class Main {
 
     public static void PrinttextMaze(Cell [][] Maze){
         //constructing the walls
-
-        String onLine = "-";
-        String betweenLine = "|";
+        //this will print two types of lines, onlines and between lines.
+        //Onlines is where the S,F and * when solving will be placed as well as the walls for left and right travel
+        //the between lines are where the up and down will be walled
+        String onLine = "-"; //top and bottom need one more character than 3 per node to line up perfectly
+        String betweenLine = "|"; //a left wall will always be in place at the start of a new line
         boolean start = false;
         boolean finish = false;
-        String[] returnHolder;
+        String[] returnHolder; //used to return 2 values from a function
+        //will create the top wall
         for(int i = 0 ; i < Maze[1].length; i++){
             onLine += "---";
         }
         System.out.println(onLine);
+        //goes line by line and collects the required characters into the online and between line then when that line if finished they are both printed, repeated till the maze is fully generated
         for(int i = 0; i < Maze.length; i++){
-            onLine = "|";
+            onLine = "|";//left wall
             betweenLine = "|";
             for(int j = 0; j < Maze[1].length; j++){
+                //finding the start and end position for S,F placement
                 if(Maze[i][j].getStart()) {
                     start = true;
                 }
                 if(Maze[i][j].getFinish()) {
                     finish = true;
                 }
+                //get.dir returns the openess of the cell, online and betweenline will give the string they have constructed
                 returnHolder = PrintWalls(Maze[i][j].getDir(),onLine,betweenLine,start,finish);
+                //values are given to the lines
                 onLine = returnHolder[0];
                 betweenLine = returnHolder[1];
+                //makes sure the program wont assume every cell after start or finish is also the start or finish
                 start = false;
                 finish = false;
             }
+            //Prints the online walls
             System.out.println(onLine);
+            //Prints the between lines if the last line is not the bottom of the maze
             if(i + 1 != Maze.length){
                 System.out.println(betweenLine);
             }
         }
+        //makes it line up with the top perfectly
         onLine = "-";
         for(int i = 0 ; i < Maze[1].length; i++){
             onLine += "---";
         }
+        //prints the bottom wall
         System.out.println(onLine);
     }
-
+//used to save redundant code and will create a line of text with the required characters based on the input values (openness,current online string, current betweenline string and if this cell is a start of finish
     public static String[] PrintWalls(int direction, String onLine, String betweenLine, boolean start, boolean finish){
-        String[] Lines = new String[]{onLine,betweenLine};
+        String[] Lines = new String[]{onLine,betweenLine}; //storing both values for return
         //[0] is online
         //[1] is betweenLines
         switch(direction){
             case 0:{
-                //will create one below and to the right
+                //will create one wall below and to the right
                 if(start){
                     Lines[0] += "S |";
                 }
@@ -428,7 +436,7 @@ public class Main {
                 break;
             }
             case 1:{
-                //will create one below
+                //will create one wall below
                 if(start){
                     Lines[0] += "S  ";
                 }
@@ -442,6 +450,7 @@ public class Main {
                 break;
             }
             case 2:{
+                //will create one wall to the right
                 if(start){
                     Lines[0] += "S |";
                 }
@@ -452,12 +461,11 @@ public class Main {
                     Lines[0] += "  |";
                 }
                 Lines[1] += "  ";
-                //will create one to the right
                 break;
             }
             default:{
                 //case 3 has right and down open so it wont need to create walls
-
+                //but needs to add the appropriate amount of whitespace
                 if(start){
                     Lines[0] += "S  ";
                 }
@@ -470,6 +478,7 @@ public class Main {
                 Lines[1] += "  ";
             }
         }
+        //a between line always has a | between cell walls
         Lines[1] += "|";
         return Lines;
     }
