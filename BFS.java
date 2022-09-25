@@ -24,7 +24,7 @@ public class BFS {
         // getting the data back from the generator
         List<Cloneable> data = generateMatrix(rawData);
         int[] export = bfs((int[][]) data.get(0), (int[]) data.get(1), (int[]) data.get(2), steps);
-        System.out.println("Maze path is: " + export.length + " steps long");
+        System.out.println("Maze path is: " + (export.length - 1 )+ " steps long");
         long end = System.currentTimeMillis();
         System.out.println("This program took: " + (end - start) + "ms to complete");
         System.out.println("Maze solution: " + Arrays.toString(export));
