@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Generator">
-    <output-path>$PROJECT_DIR$/out/artifacts/Generator</output-path>
-    <root id="archive" name="MazeGenerator.jar">
+  <artifact type="jar" name="MazeGen">
+    <output-path>$PROJECT_DIR$/out/artifacts/MazeGen</output-path>
+    <root id="archive" name="MazeGen.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-MAIN/META-INF/MANIFEST.MF" />
       </element>
