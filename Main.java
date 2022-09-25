@@ -3,52 +3,22 @@ import java.nio.charset.StandardCharsets;
 //import java.util.Scanner;
 import java.util.Random;
 public class Main {
-    //lmao I have totally forgotten how to use java
     public static void main(String[] args) throws IOException {
-
         int mazeSize = Integer.parseInt(args[0]);
         int mazeSize2 = Integer.parseInt(args[1]);
         String OutName = args[2];
-//        int i, j;
-//        for(i = 0; i < 3; i++){
-//            int x = 0, y = 0;
-//            switch(i){
-//                case 0:
-//                    x = 20;
-//                    y = 20;
-//                    break;
-//                case 1:
-//                    x = 20;
-//                    y = 50;
-//                    break;
-//                case 2:
-//                    x = 100;
-//                    y = 100;
-//            }
-//            for(j = 0; j < 5; j++){
-//                Cell[][] maze = makeMaze(x,y); //I think the row and column can be different
-//                maze = MazePath(maze);
-//                // System.out.println(maze);
-//                PrintMaze(maze, "Maze" + y + "_"+j);
-//            }
-//        }
-
-        Cell[][] maze = makeMaze(mazeSize,mazeSize2); //I think the row and column can be different
+        //makes a 2d array of the maze sizes
+        Cell[][] maze = makeMaze(mazeSize,mazeSize2);
+        //assigns a random start and finish position then creates the maze
         maze = MazePath(maze);
-        // System.out.println(maze);
+        //writes the maze information to a txt file named what was inputted
         PrintMaze(maze, OutName);
+        //prints the maze in visual form to the console
+        PrinttextMaze(maze);
     }
-//    public static void main(String[] args) {
-//        Cell[][] maze = makeMaze(5,3); //I think the row and column can be different
-//        //for(int i = 0; i < 20; i++) {
-//        maze = MazePath(maze);
-//        // System.out.println(maze);
-//        PrintMaze(maze);
-//        //}
-//    }
-    //This creates a completely open maze. every value is set to 3.
+    //This creates a completely blank maze
     public static Cell[][] makeMaze(int size1, int size2){
-        Cell[][] maze = new Cell[size1][size2];
+        Cell[][] maze = new Cell[size1][size2]; //cell is a created object type that holds the information a maze cell would need
         int i = 0;
         int j = 0;
         for(i = 0; i < size1; i++){
@@ -59,11 +29,11 @@ public class Main {
         return maze;
     }
 
-    //print the list to a file. but as yet does nothing
+    //print the list to a file.
     // file format -> n,m:start:finish:maze
     public static void PrintMaze(Cell[][] maze, String outputName) throws IOException {
+
         String totalpath = Print(maze);
-        //System.out.println(totalpath);
         PrintWriter writer = new PrintWriter(outputName, StandardCharsets.UTF_8);
         writer.println(totalpath);
         writer.close();
@@ -72,65 +42,66 @@ public class Main {
 
     //used to find the start and the finish node.
     public static String Print(Cell[][] maze){
-        String val = "";
+        String val = ""; //stores all the openness of the maze
         String start = "";
         String finish = "";
-        int tempval;
+        int tempval; //stores the converted integer value of the 2d array maze[][] position
         int i, j;
+        //runs through the maze and collects the start, finish and openness of all cells
         for(i = 0; i < maze.length; i++){
             for(j = 0; j < maze[0].length; j++){
+                    //a single cell has this attribute set to true
                     if(maze[i][j].getStart()) {
                         //since dfs works from 1 not zero
                         //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
                         tempval = (i * maze[0].length + j ) + 1;
-                        start = "" + tempval ;  //Why +1? for sanity of course! not really i was happy to have it index from 0 but according to the specs it starts at 1. sadly....
-                        //start = "" + (i) * (j);
-                        System.out.println(i + " "+j);
+                        start = "" + tempval ;  //saving to start
                     }
+                //a single cell has this attribute set to true
                     if(maze[i][j].getFinish()) {
-                        System.out.println(i + " "+j);
+                        System.out.println("Finishing cell" + i + " "+j);
+                        //rows and columns are one below what we need so for it were actually grabbing the first position of our row and plusing that by what colum its on so the column needs to be plus 1
                         tempval = (i * maze[0].length + j ) + 1;
-                        finish = ""+ tempval; //As above so below
+                        finish = ""+ tempval; //saving to finish
                     }
-                    val += maze[i][j].getDir();
+                    val += maze[i][j].getDir(); //sores the openness of the cell and adds it to the string
                 }
             }
+        //returns the required values in the proper format
         return maze.length + "," + maze[0].length + ":" + start + ":" + finish + ":" + val;
     }
 
     public static Cell[][] MazePath(Cell[][] maze){
         Random rand = new Random();
-        //System.out.println(maze.length-1);
-        //System.out.print(maze[0].length-1);
         // generating the start. this ensures the start will be on an edge.
         // this also ensures the start and end are diff.
         int coordinate2 = 0;
         int coordinate1 = rand.nextInt(maze.length);
-        if(coordinate1 == 0){
+        if(coordinate1 == 0){ //if both coordinates are 0 then cord 2 changes
             coordinate2 = rand.nextInt(maze[0].length);
         }
         maze[coordinate1][coordinate2].setFinish(true);
 
         boolean diffStart = false;
+        //ensures start and finish values will not be the same
         while(!diffStart) {
             coordinate2 = rand.nextInt(maze.length);
             coordinate1 = 0;
+            //random position
             if(coordinate2 == 0){
                 coordinate1 = rand.nextInt(maze[0].length);
             }
+            //if the coordinates chosen for the start position are not equal to the coordinates chosen for the end position it is set as the start and the while loop is broken
             if(!maze[coordinate1][coordinate2].isFinish){
                 maze[coordinate1][coordinate2].setStart(true);
                 diffStart = true;
             }
-            System.out.println(coordinate1 + " " + coordinate2);
         }
         // == What you see above you is so dumb but it works == //
 
         // Generating the paths
-        System.out.println("StartingValues " + coordinate1 + " " + coordinate2);
+
         maze = mazeRec(maze, coordinate1, coordinate2);
-        // maze = mazeRec(maze, coordinate1, coordinate2);
-        System.out.println("WE GOT OUT");
         return maze;
     }
 
@@ -397,40 +368,110 @@ public class Main {
         }
     }
 
+    public static void PrinttextMaze(Cell [][] Maze){
+        //constructing the walls
+
+        String onLine = "-";
+        String betweenLine = "|";
+        boolean start = false;
+        boolean finish = false;
+        String[] returnHolder;
+        for(int i = 0 ; i < Maze[1].length; i++){
+            onLine += "---";
+        }
+        System.out.println(onLine);
+        for(int i = 0; i < Maze.length; i++){
+            onLine = "|";
+            betweenLine = "|";
+            for(int j = 0; j < Maze[1].length; j++){
+                if(Maze[i][j].getStart()) {
+                    start = true;
+                }
+                if(Maze[i][j].getFinish()) {
+                    finish = true;
+                }
+                returnHolder = PrintWalls(Maze[i][j].getDir(),onLine,betweenLine,start,finish);
+                onLine = returnHolder[0];
+                betweenLine = returnHolder[1];
+                start = false;
+                finish = false;
+            }
+            System.out.println(onLine);
+            if(i + 1 != Maze.length){
+                System.out.println(betweenLine);
+            }
+        }
+        onLine = "-";
+        for(int i = 0 ; i < Maze[1].length; i++){
+            onLine += "---";
+        }
+        System.out.println(onLine);
+    }
+
+    public static String[] PrintWalls(int direction, String onLine, String betweenLine, boolean start, boolean finish){
+        String[] Lines = new String[]{onLine,betweenLine};
+        //[0] is online
+        //[1] is betweenLines
+        switch(direction){
+            case 0:{
+                //will create one below and to the right
+                if(start){
+                    Lines[0] += "S |";
+                }
+                else if(finish){
+                    Lines[0] += "F |";
+                }
+                else{
+                    Lines[0] += "  |";
+                }
+                Lines[1] += "--";
+                break;
+            }
+            case 1:{
+                //will create one below
+                if(start){
+                    Lines[0] += "S  ";
+                }
+                else if(finish){
+                    Lines[0] += "F  ";
+                }
+                else{
+                    Lines[0] += "   ";
+                }
+                Lines[1] += "--";
+                break;
+            }
+            case 2:{
+                if(start){
+                    Lines[0] += "S |";
+                }
+                else if(finish){
+                    Lines[0] += "F |";
+                }
+                else{
+                    Lines[0] += "  |";
+                }
+                Lines[1] += "  ";
+                //will create one to the right
+                break;
+            }
+            default:{
+                //case 3 has right and down open so it wont need to create walls
+
+                if(start){
+                    Lines[0] += "S  ";
+                }
+                else if(finish){
+                    Lines[0] += "F  ";
+                }
+                else{
+                    Lines[0] += "   ";
+                }
+                Lines[1] += "  ";
+            }
+        }
+        Lines[1] += "|";
+        return Lines;
+    }
 }
 
-/*Assessment Specifications MAZE Generation
-I think the word node and cell are interchanged halfway through but mean the same thing
-    Size(row,column) is a variable that is inputted on maze generation
-    No Loops or inaccessible areas
-    Represent using a 2d array of cells that stores all four walls and if those walls are open or close of each cell
-    We always know the start and finish cell
-    Maze has to have a closed area just outer connected walls that limit movement outside the maze
-
-    To create the maze we "must" just the random walk technique,
-    To generate an n×m maze, we create a grid graph of size n×m. The nodes in the grid represent the cells in the
-    maze and can be indexed by 1, …, n×m in a row-major wise. Figure 2 shows a 5×5 grid with the cells indexed by
-    1, …, 25. Nevertheless, for the random walk technique, we mark a random node (node 1 in Figure 2) as the
-    starting node, and then walk around randomly on the graph. When selecting which node to visit from the current
-    node, we randomly select an unvisited node from the neighbouring nodes that could be accessed. Note that not
-    visiting any previously visited node will ensure no cyclic path. Nevertheless, for each move that we make from
-    one node to a neighbouring node, we have an edge, and we consider the corresponding wall between the respective
-    two cells is missing. As part of the random walk, if no movement is made between two neighbouring cells, then
-    we assume the wall between the respective cells exists.
-    see figure 2-3 for a visual representation
-    Does seem like you can go back through the maze and break off of a previously used node in another direction that still satisfies the limitations
-
-
-    When running this program through the command line it should take the amount of rows and columns as the input and output a file name
-        Should give error messages for invalid inputs
-        Once completed and created the maze should save a file of this format
-        n,m:start_node:finish_node:cell_openness_list
-        n - m are the row and column amounts *i think
-        Start and finish node are not equal to and are between 1 and nxm
-        cell_openness_list values are as per the following codes and are listed in the row-major order
-            0: Both closed
-            1: Right only open
-            2: Down only open
-            3: both open
-        5,5:1:3:1223030112231122230210110 (a number per node)
- */

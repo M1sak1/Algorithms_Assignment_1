@@ -26,13 +26,12 @@ public class DFS {
         MazeInformation(DFSHolder, Maze);
         //you may notice its not using the first one, that is because doing it through openness was a huge mistake
         DFS2(DFSHolder);
-
         long end = System.currentTimeMillis();
         System.out.println("This maze's path " + DFSHolder.getPath());
         System.out.println("The steps taken " + (DFSHolder.getStepsForPath() - 1));//it shouldn't count the first node as that's where we begin not a step
         System.out.println("The total steps taken to find the path " + DFSHolder.getSteps());
         System.out.println("This program took: " + (end - start) + "ms to complete");
-        //A small scale solution of small problems is all that's needed now
+        PrinttextMaze(DFSHolder);
     }
 
     public static DFSObject MazeInformation(DFSObject DFSHolder, String MazeFile){
@@ -380,5 +379,148 @@ public class DFS {
         }
         // returns false by default
         return false;
+    }
+
+    public static void PrinttextMaze(DFSObject DFSHolder){
+        //constructing the walls
+        String onLine = "-";
+        String betweenLine = "|";
+        int location = 1;
+        int direction;
+        int[] storePath = new int[DFSHolder.getStepsForPath()];
+        int q = 0;
+        int p = 0;
+        String holder = "";
+        while(p < DFSHolder.getPath().length()){
+            if(DFSHolder.getPath().charAt(p) == ','){
+                storePath[q] = Integer.parseInt(holder);
+                q++;
+                holder = "";
+            }
+            else {
+                holder += DFSHolder.getPath().charAt(p);
+            }
+            p++;
+        }
+        storePath[q] = Integer.parseInt(holder);
+
+        String[] returnHolder;
+        for(int i = 0 ; i < DFSHolder.getNumColumns(); i++){
+            onLine += "---";
+        }
+        System.out.println(onLine);
+        for(int i = 0; i < DFSHolder.getNumRows(); i++){
+            onLine = "|";
+            betweenLine = "|";
+            for(int j = 0; j < DFSHolder.getNumColumns(); j++){
+                direction = Character.getNumericValue(DFSHolder.getMaze().charAt(location - 1));
+                returnHolder = PrintWalls(direction,onLine,betweenLine,storePath, location);
+                onLine = returnHolder[0];
+                betweenLine = returnHolder[1];
+                location++;
+            }
+            System.out.println(onLine);
+            if(i + 1 != DFSHolder.getNumRows()){
+                System.out.println(betweenLine);
+            }
+        }
+        onLine = "-";
+        for(int i = 0 ; i < DFSHolder.getNumColumns(); i++){
+            onLine += "---";
+        }
+        System.out.println(onLine);
+    }
+
+    public static String[] PrintWalls(int direction, String onLine, String betweenLine, int[] path, int location){
+        String[] Lines = new String[]{onLine,betweenLine};
+        boolean start = false;
+        boolean finish = false;
+        boolean onPath = false;
+        //[0] is online
+        //[1] is betweenLines
+        for(int p = 0; p < path.length; p++){
+            if(path[p] == location){
+                if(path[0] == location){
+                    start = true;
+                }
+                if(path[path.length-1] == location){
+                    finish = true;
+                }
+                onPath = true;
+                break;
+            }
+        }
+        switch(direction){
+            case 0:{
+                //will create one below and to the right
+                if(start){
+                    Lines[0] += "S |";
+                }
+                else if(finish){
+                    Lines[0] += "F |";
+                }
+                else if(onPath){
+                    Lines[0] += "* |";
+                }
+                else{
+                    Lines[0] += "  |";
+                }
+                Lines[1] += "--";
+                break;
+            }
+            case 1:{
+                //will create one below
+                if(start){
+                    Lines[0] += "S  ";
+                }
+                else if(finish){
+                    Lines[0] += "F  ";
+                }
+                else if(onPath){
+                    Lines[0] += "*  ";
+                }
+                else{
+                    Lines[0] += "   ";
+                }
+                Lines[1] += "--";
+                break;
+            }
+            case 2:{
+                if(start){
+                    Lines[0] += "S |";
+                }
+                else if(finish){
+                    Lines[0] += "F |";
+                }
+                else if(onPath){
+                    Lines[0] += "* |";
+                }
+                else{
+                    Lines[0] += "  |";
+                }
+                Lines[1] += "  ";
+                //will create one to the right
+                break;
+            }
+            default:{
+                //case 3 has right and down open so it wont need to create walls
+
+                if(start){
+                    Lines[0] += "S  ";
+                }
+                else if(finish){
+                    Lines[0] += "F  ";
+                }
+                else if(onPath){
+                    Lines[0] += "*  ";
+                }
+                else{
+                    Lines[0] += "   ";
+                }
+                Lines[1] += "  ";
+            }
+        }
+        Lines[1] += "|";
+        return Lines;
     }
 }
