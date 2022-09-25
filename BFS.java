@@ -83,7 +83,7 @@ public class BFS {
             steps[0] ++;
         }
         //System.out.println(PossiblePaths);
-        System.out.println("This program took " + steps[0] + " total");
+        System.out.println("This program took " + steps[0] + " steps total");
         return result;
     }
 
