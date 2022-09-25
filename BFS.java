@@ -82,7 +82,7 @@ public class BFS {
             start = bfs.remove();
             steps[0] ++;
         }
-        //System.out.println(PossiblePaths);
+        System.out.println(PossiblePaths);
         System.out.println("This program took " + steps[0] + " steps total");
         return result;
     }
@@ -159,15 +159,16 @@ public class BFS {
         int Row = indx[0];
 
         if(newNode == tailNode - 1){                // Left
+            // check if the move is possible
             return true;
         }
         if(newNode == tailNode + 1){                // Right
             return true;
         }
-        if(newNode == (tailNode + maze.length)){    // Down
+        if(newNode == (tailNode + maze[0].length)){    // Down
             return true;
         }
-        if(newNode == (tailNode - maze.length)){    // up
+        if(newNode == (tailNode - maze[0].length)){    // up
             return true;
         }
         return false;
